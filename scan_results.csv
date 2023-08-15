@@ -1,0 +1,594 @@
+"IP","DNS Name","Netbios Name","QID","Instance","Result","Protocol","Port","SSL","FQDN","Result Errors","Result Debug"
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","82040",,"ICMP Reply Type	Triggered By	Additional Information
+Echo (type=0 code=0)	Echo Request	Echo Reply",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","6",,"IP address	Host name
+10.132.122.35	pccs501zatcwi.vodacom.corp",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","45006",,"Hops	IP	Round Trip Time	Probe	Port
+1	10.134.104.1	0.61ms	ICMP	 
+2	10.132.9.20	0.58ms	ICMP	 
+3	10.132.9.18	0.71ms	ICMP	 
+4	*.*.*.*	0.00ms	Other	21
+5	*.*.*.*	0.00ms	Other	21
+6	*.*.*.*	0.00ms	Other	21
+7	*.*.*.*	0.00ms	Other	21
+8	10.132.122.35	1.08ms	TCP	21",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","34011",,"Firewall responded to TCP probes sent to port 111 with RST packets (hopcount to firewall 4 vs hopcount to target 8).",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","48086",,"Microsoft Server Message Block (SMBv3) Compression Disabled",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","45262",,"SMB Version 2 detected on TCP port 445.",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","70038",,,,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","70028",,"User Name	(none)
+Domain	(none)
+Authentication Scheme	NULL session
+Security	User-based
+SMBv1 Signing	Disabled
+Discovery Method	NULL session, no valid login credentials provided or found
+CIFS Signing	default",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","90194",,"Access to Remote Registry Service is denied, error: 0x0",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","82044",,"PCCS501ZATCWI",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","42017",,"Service name: Remote Desktop on TCP port 3389.",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","70022",,"Description	Version	TCP Ports	UDP Ports	HTTP Ports	NetBIOS/CIFS Pipes
+Microsoft NT Directory DRS Interface	4.0	54454	 	 	 
+Microsoft Registry	1.0	 	 	 	\PIPE\winreg
+Microsoft Scheduler Control Service	1.0	 	 	 	\PIPE\atsvc
+Microsoft Security Account Manager	1.0	54491, 54395	 	 	\pipe\lsass
+Microsoft Service Control Service	2.0	54506	 	 	 
+Microsoft Task Scheduler	1.0	 	 	 	\PIPE\atsvc
+WinHttp Auto-Proxy Service	5.1	 	 	 	\PIPE\W32TIME_ALT
+(Unknown Service)	1.0	49664	 	 	\PIPE\InitShutdown
+(Unknown Service)	1.0	 	 	 	\PIPE\InitShutdown
+(Unknown Service)	1.0	 	 	 	\pipe\LSM_API_service
+(Unknown Service)	1.0	54418	 	 	\pipe\LSM_API_service, \pipe\SessEnvPublicRpc, \PIPE\atsvc
+(Unknown Service)	0.0	 	 	 	\pipe\LSM_API_service
+Event log TCPIP	1.0	49665	 	 	\pipe\eventlog
+RemoteRegistry Perflib Interface	1.0	 	 	 	\PIPE\winreg
+UserMgrCli	1.0	54418	 	 	\pipe\SessEnvPublicRpc, \PIPE\atsvc
+(Unknown Service)	1.0	54418	 	 	\pipe\SessEnvPublicRpc, \PIPE\atsvc
+(Unknown Service)	1.0	54418	 	 	\PIPE\atsvc
+(Unknown Service)	2.0	 	 	 	\PIPE\atsvc
+Adh APIs	1.0	 	 	 	\PIPE\atsvc
+IKE/Authip API	1.0	 	 	 	\PIPE\atsvc
+(Unknown Service)	1.0	 	 	 	\PIPE\atsvc
+Impl friendly name	1.0	 	 	 	\PIPE\atsvc
+Proxy Manager client server endpoint	1.0	 	 	 	\PIPE\atsvc
+Proxy Manager provider server endpoint	1.0	 	 	 	\PIPE\atsvc
+IP Transition Configuration endpoint	1.0	 	 	 	\PIPE\atsvc
+DfsDs service	1.0	 	 	 	\PIPE\wkssvc
+Ngc Pop Key Service	1.0	54395	 	 	\pipe\lsass
+KeyIso	2.0	54395	 	 	\pipe\lsass
+RemoteAccessCheck	0.0	54395	 	 	\pipe\lsass
+Remote Fw APIs	1.0	54429",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","82063",,"Based on TCP timestamps obtained via port 135, the host's uptime is 19 days, 6 hours, and 19 minutes.
+The TCP timestamps from the host are in units of 1 milliseconds.",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","82045",,"Average change between subsequent TCP initial sequence numbers is 728047746 with a standard deviation of 572662100. These TCP initial sequence numbers were triggered by TCP SYN probes sent to the host at an average rate of 1/(5097 microseconds). The degree of difficulty to exploit the TCP initial sequence number generation scheme is: hard.",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","45017",,"Operating System	Technique	ID
+Windows 2016/2019/10	NTLMSSP	 
+Windows Vista / Windows 2008 / Windows 7 / Windows 2012	TCP/IP Fingerprint	U3675:135",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","82046",,"IP ID changes observed (network order) for port 135: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 
+Duration: 19 milli seconds",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","45039",,"Host Name	Source
+PCCS501ZATCWI.vodacom.corp	NTLM DNS
+pccs501zatcwi.vodacom.corp	FQDN
+PCCS501ZATCWI	NTLM NetBIOS",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","82023",,"Port	IANA Assigned Ports/Services	Description	Service Detected	OS On Redirected Port
+135	msrpc-epmap	epmap DCE endpoint resolution	DCERPC Endpoint Mapper 	 
+443	https	http protocol over TLS/SSL	http over ssl	 
+445	microsoft-ds	Microsoft-DS	SMBv2 	 
+3389	ms-wbt-server	MS WBT Server	win remote desktop",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","45038",,"Scan duration: 1314 seconds
+
+Start time: Sun, Apr 16 2023, 02:29:35 GMT
+
+End time: Sun, Apr 16 2023, 02:51:29 GMT",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","45426",,"Protocol	Port	Time
+TCP	135	 0:01:05
+TCP	139	 0:00:58
+TCP	443	 2:17:40
+TCP	3389	 0:02:45",,,"no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","86672",,"Directory	Source
+/aspnet_client/	brute force","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","12049",,".Aspx,.Asmx,.Rem,.Soap,","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","12033",,".Aspx,.Asmx,.Rem,.Soap,","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","86484",,"X-AspNet-Version: 4.0.30319","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","45056",,"Allow: OPTIONS, TRACE, GET, HEAD, POST","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","87089",,"HTTP/1.1 200 OK
+Content-Type: text/html
+Last-Modified: Mon, 29 Jul 2019 14:37:07 GMT
+Accept-Ranges: bytes
+ETag: ""4f59db181b46d51:0""
+Server: Microsoft-IIS/10.0
+X-Powered-By: ASP.NET
+Date: Sun, 16 Apr 2023 02:34:02 GMT
+Connection: keep-alive
+Content-Length: 703
+
+<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Strict//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"">
+<html xmlns=""http://www.w3.org/1999/xhtml"">
+<head>
+<meta http-equiv=""Content-Type"" content=""text/html; charset=iso-8859-1"" />
+<title>IIS Windows Server</title>
+<style type=""text/css"">
+<!--
+body {
+color:000000;
+background-color:0072C6;
+margin:0;
+}
+
+container {
+margin-left:auto;
+margin-right:auto;
+text-align:center;
+}
+
+a img {
+border:none;
+}
+
+-->
+</style>
+</head>
+<body>
+<div id=""container"">
+<img src=""iisstart.png"" alt=""IIS"" width=""960"" height=""600"" /> (http://go.microsoft.com/fwlink/?linkid=66138&amp;clcid=0x409)
+</div>
+</body>
+</html>","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","45266",,"Remote Web Server supports HTTP version 1.x on 443 port.GET / HTTP/1.1","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","11827",,"X-Content-Type-Options HTTP Header missing on port 443.
+
+GET / HTTP/1.0
+Host: pccs501zatcwi.vodacom.corp
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0
+
+
+
+HTTP/1.1 200 OK
+Content-Type: text/html
+Last-Modified: Mon, 29 Jul 2019 14:37:07 GMT
+Accept-Ranges: bytes
+ETag: ""4f59db181b46d51:0""
+Server: Microsoft-IIS/10.0
+X-Powered-By: ASP.NET
+Date: Sun, 16 Apr 2023 02:36:45 GMT
+Connection: keep-alive
+Content-Length: 703
+
+Strict-Transport-Security HTTP Header missing on port 443.","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","48001",,"Content-Security-Policy HTTP Header missing on port 443.
+GET / HTTP/1.0
+Host: pccs501zatcwi.vodacom.corp","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","48002",,"HTTP Public-Key-Pins Header missing on port 443.
+GET / HTTP/1.0
+Host: pccs501zatcwi.vodacom.corp","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","48118",,"HTTP header and method information collected on port 443.
+
+GET / HTTP/1.0
+Host: pccs501zatcwi.vodacom.corp
+
+
+
+HTTP/1.1 200 OK
+Content-Type: text/html
+Last-Modified: Mon, 29 Jul 2019 14:37:07 GMT
+Accept-Ranges: bytes
+ETag: ""4f59db181b46d51:0""
+Server: Microsoft-IIS/10.0
+X-Powered-By: ASP.NET
+Date: Sun, 16 Apr 2023 02:34:02 GMT
+Connection: keep-alive
+Content-Length: 703","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","48131",,"Referrer-Policy HTTP Header missing on 443 port.
+GET / HTTP/1.0
+Host: pccs501zatcwi.vodacom.corp","tcp","443","no",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38291",,"TLSv1 session caching is enabled on the target.
+TLSv1.1 session caching is enabled on the target.
+TLSv1.2 session caching is enabled on the target.","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","86002",,"NAME	VALUE
+(0)CERTIFICATE 0	 
+(0)Version	3 (0x2)
+(0)Serial Number	 66:b1:33:b4:cf:39:d3:94:4e:fe:48:4b:0c:ec:1e:a6 
+(0)Signature Algorithm	sha256WithRSAEncryption
+(0)ISSUER NAME	 
+commonName	PCCS501ZATCWI.vodacom.corp
+(0)SUBJECT NAME	 
+commonName	PCCS501ZATCWI.vodacom.corp
+(0)Valid From	Jun 8 12:41:05 2022 GMT
+(0)Valid Till	Jun 8 00:00:00 2023 GMT
+(0)Public Key Algorithm	rsaEncryption
+(0)RSA Public Key	(2048 bit)
+(0)	 RSA Public-Key: (2048 bit)
+(0)	 Modulus:
+(0)	 00:c3:76:cf:05:f6:34:b6:28:06:63:78:7a:c9:93:
+(0)	 24:c4:39:78:64:43:c8:c2:a0:48:ea:ff:bd:4e:bb:
+(0)	 71:9d:2f:da:26:a3:c4:a1:b5:eb:d2:1e:e8:d2:41:
+(0)	 cf:3b:f6:61:60:c0:67:a3:c7:6a:d8:65:47:c5:9d:
+(0)	 f4:dc:2c:25:a6:d5:50:19:83:bb:6b:cd:5d:33:66:
+(0)	 d5:c4:ea:19:55:f6:4c:99:90:e7:5a:3e:d5:e5:7a:
+(0)	 d8:ef:cd:05:7b:32:8c:29:2c:1a:a4:8c:a8:1f:23:
+(0)	 4a:30:b6:e4:bd:fe:6d:3b:b1:d6:74:28:71:f1:78:
+(0)	 2d:ce:b8:35:7b:c3:6d:75:60:fe:03:c1:dc:41:51:
+(0)	 b3:44:47:2d:79:7b:8d:6d:f3:94:ac:6e:68:28:9e:
+(0)	 ae:70:92:d3:dc:af:5a:b1:08:30:bf:ad:e1:a6:30:
+(0)	 98:54:a1:7a:09:dd:8a:34:66:b4:de:35:b5:e5:a8:
+(0)	 c4:f9:f2:d0:46:76:d8:af:2a:34:ce:63:2f:0f:99:
+(0)	 7f:93:e0:c3:cd:95:bb:dc:0f:de:f8:fd:8a:cc:72:
+(0)	 db:59:ed:ec:ec:a3:af:ab:74:5a:d4:db:e9:e6:f0:
+(0)	 43:33:6f:06:98:f1:d3:78:8c:6a:a8:d5:22:0a:25:
+(0)	 0b:9b:a9:af:99:ee:27:2d:f0:6b:7f:f7:42:f3:f4:
+(0)	 46:ab
+(0)	 Exponent: 65537 (0x10001)
+(0)X509v3 EXTENSIONS	 	
+(0)X509v3 Key Usage	 Key Encipherment, Data Encipherment
+(0)X509v3 Extended Key Usage	 TLS Web Server Authentication
+(0)Signature	(256 octets)
+(0)	12:5f:58:1c:84:e2:b0:91:a3:b7:4c:c1:62:13:29:b8
+(0)	50:49:6b:c1:44:2d:81:c1:73:85:3c:45:b0:4e:43:1c
+(0)	09:d6:97:af:7f:3f:96:c5:91:7f:77:fd:a8:62:b7:37
+(0)	15:4e:20:81:c1:40:1e:39:eb:ff:de:26:ea:a4:84:ab
+(0)	68:ff:00:63:e3:5b:d1:6d:69:f8:10:52:d7:76:b6:b7
+(0)	f3:2e:51:75:3a:f1:93:71:40:eb:69:8b:37:06:36:f0
+(0)	2c:12:33:4c:29:ef:ef:0c:94:36:5d:58:7a:3a:58:9e
+(0)	03:bf:47:4f:81:f8:bf:23:78:2f:e3:dd:04:7b:89:21
+(0)	51:15:74:12:15:0c:cf:e6:bd:02:22:af:86:08:d7:0c
+(0)	e3:91:38:52:bc:00:a3:d1:48:02:8c:20:8e:0b:4b:71
+(0)	51:62:5d:13:34:f2:df:78:a6:8e:ef:71:5c:f6:79:c2
+(0)	d3:cb:3f:d5:36:28:73:ff:5e:a7:8c:b4:1f:b5:b8:43
+(0)	3f:72:11:02:e8:eb:aa:a4:38:97:ea:05:78:b8:83:4f
+(0)	cf:39:8a:6a:50:43:77:50:f2:59:58:1d:86:d4:bc:7b
+(0)	d0:ea:66:57:c4:50:c0:c7:8d:a1:b5:3c:15:26:dd:bf
+(0)	cc:51:6a:65:01:00:17:4f:6b:e0:04:cf:af:c3:c9:ca","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38600",,"Certificate 0 CN=PCCS501ZATCWI.vodacom.corp The certificate will expire within six months: Jun  8 00:00:00 2023 GMT","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38173",,"Certificate 0 CN=PCCS501ZATCWI.vodacom.corp self signed certificate","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38628",,"TLSv1.0 is supported","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38794",,"TLSv1.1 is supported","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","42350",,"TLS Secure Renegotiation Extension Status: supported.","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38597",,"table	cols=2
+my version	target version
+0304	0303
+0399	0303
+0400	0303
+0499	0303","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38116",,"CIPHER	KEY-EXCHANGE	AUTHENTICATION	MAC	ENCRYPTION(KEY-STRENGTH)	GRADE
+SSLv2 PROTOCOL IS DISABLED	 	 	 	 	 
+SSLv3 PROTOCOL IS DISABLED	 	 	 	 	 
+TLSv1 PROTOCOL IS ENABLED	 	 	 	 	 
+TLSv1	COMPRESSION METHOD	None	 	 	 
+AES128-SHA	RSA	RSA	SHA1	AES(128)	MEDIUM
+AES256-SHA	RSA	RSA	SHA1	AES(256)	HIGH
+ECDHE-RSA-AES128-SHA	ECDH	RSA	SHA1	AES(128)	MEDIUM
+ECDHE-RSA-AES256-SHA	ECDH	RSA	SHA1	AES(256)	HIGH
+TLSv1.1 PROTOCOL IS ENABLED	 	 	 	 	 
+TLSv1.1	COMPRESSION METHOD	None	 	 	 
+AES128-SHA	RSA	RSA	SHA1	AES(128)	MEDIUM
+AES256-SHA	RSA	RSA	SHA1	AES(256)	HIGH
+ECDHE-RSA-AES128-SHA	ECDH	RSA	SHA1	AES(128)	MEDIUM
+ECDHE-RSA-AES256-SHA	ECDH	RSA	SHA1	AES(256)	HIGH
+TLSv1.2 PROTOCOL IS ENABLED	 	 	 	 	 
+TLSv1.2	COMPRESSION METHOD	None	 	 	 
+AES128-SHA	RSA	RSA	SHA1	AES(128)	MEDIUM
+AES256-SHA	RSA	RSA	SHA1	AES(256)	HIGH
+AES128-GCM-SHA256	RSA	RSA	AEAD	AESGCM(128)	MEDIUM
+AES256-GCM-SHA384	RSA	RSA	AEAD	AESGCM(256)	HIGH
+DHE-RSA-AES128-GCM-SHA256	DH	RSA	AEAD	AESGCM(128)	MEDIUM
+DHE-RSA-AES256-GCM-SHA384	DH	RSA	AEAD	AESGCM(256)	HIGH
+ECDHE-RSA-AES128-SHA	ECDH	RSA	SHA1	AES(128)	MEDIUM
+ECDHE-RSA-AES256-SHA	ECDH	RSA	SHA1	AES(256)	HIGH
+ECDHE-RSA-AES128-SHA256	ECDH	RSA	SHA256	AES(128)	MEDIUM
+ECDHE-RSA-AES256-SHA384	ECDH	RSA	SHA384	AES(256)	HIGH
+ECDHE-RSA-AES256-GCM-SHA384	ECDH	RSA	AEAD	AESGCM(256)	HIGH
+AES128-SHA256	RSA	RSA	SHA256	AES(128)	MEDIUM
+AES256-SHA256	RSA	RSA	SHA256	AES(256)	HIGH
+TLSv1.3 PROTOCOL IS DISABLED","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38704",,"CIPHER	NAME	GROUP	KEY-SIZE	FORWARD-SECRET	CLASSICAL-STRENGTH	QUANTUM-STRENGTH
+TLSv1	 	 	 	 	 	 
+AES256-SHA	RSA	 	2048	no	110	low
+AES128-SHA	RSA	 	2048	no	110	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp256r1	256	yes	128	low
+TLSv1.1	 	 	 	 	 	 
+AES256-SHA	RSA	 	2048	no	110	low
+AES128-SHA	RSA	 	2048	no	110	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp256r1	256	yes	128	low
+TLSv1.2	 	 	 	 	 	 
+AES256-SHA256	RSA	 	2048	no	110	low
+AES128-SHA256	RSA	 	2048	no	110	low
+AES256-GCM-SHA384	RSA	 	2048	no	110	low
+AES128-GCM-SHA256	RSA	 	2048	no	110	low
+AES256-SHA	RSA	 	2048	no	110	low
+AES128-SHA	RSA	 	2048	no	110	low
+DHE-RSA-AES256-GCM-SHA384	DHE	 	2048	yes	110	low
+DHE-RSA-AES128-GCM-SHA256	DHE	 	2048	yes	110	low
+ECDHE-RSA-AES256-GCM-SHA384	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES256-GCM-SHA384	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES256-SHA384	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES256-SHA384	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES128-SHA256	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES128-SHA256	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp256r1	256	yes	128	low","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38706",,"NAME	STATUS
+TLSv1	 
+Extended Master Secret	yes
+Encrypt Then MAC	no
+Heartbeat	no
+Truncated HMAC	no
+Cipher priority controlled by	server
+OCSP stapling	no
+SCT extension	no
+TLSv1.1	 
+Extended Master Secret	yes
+Encrypt Then MAC	no
+Heartbeat	no
+Truncated HMAC	no
+Cipher priority controlled by	server
+OCSP stapling	no
+SCT extension	no
+TLSv1.2	 
+Extended Master Secret	yes
+Encrypt Then MAC	no
+Heartbeat	no
+Truncated HMAC	no
+Cipher priority controlled by	server
+OCSP stapling	no
+SCT extension	no","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","12230",,"GET / HTTP/1.0
+Host: pccs501zatcwi.vodacom.corp
+
+
+
+HTTP/1.1 200 OK
+Content-Type: text/html
+Last-Modified: Mon, 29 Jul 2019 14:37:07 GMT
+Accept-Ranges: bytes
+ETag: ""4f59db181b46d51:0""
+Server: Microsoft-IIS/10.0
+X-Powered-By: ASP.NET
+Date: Sun, 16 Apr 2023 02:34:02 GMT
+Connection: keep-alive
+Content-Length: 703
+
+<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Strict//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"">
+<html xmlns=""http://www.w3.org/1999/xhtml"">
+<head>
+<meta http-equiv=""Content-Type"" content=""text/html; charset=iso-8859-1"" />
+<title>IIS Windows Server</title>
+<style type=""text/css"">
+<!--
+body {
+color:000000;
+background-color:0072C6;
+margin:0;
+}
+
+container {
+margin-left:auto;
+margin-right:auto;
+text-align:center;
+}
+
+a img {
+border:none;
+}
+
+-->
+</style>
+</head>
+<body>
+<div id=""container"">
+<img src=""iisstart.png"" alt=""IIS"" width=""960"" height=""600"" /> (http://go.microsoft.com/fwlink/?linkid=66138&amp;clcid=0x409)
+</div>
+</body>
+</html>","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","13910",,"GET / HTTP/1.0
+Host: pccs501zatcwi.vodacom.corp
+
+
+
+HTTP/1.1 200 OK
+Content-Type: text/html
+Last-Modified: Mon, 29 Jul 2019 14:37:07 GMT
+Accept-Ranges: bytes
+ETag: ""4f59db181b46d51:0""
+Server: Microsoft-IIS/10.0
+X-Powered-By: ASP.NET
+Date: Sun, 16 Apr 2023 02:35:43 GMT
+Connection: keep-alive
+Content-Length: 703
+
+<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Strict//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"">
+<html xmlns=""http://www.w3.org/1999/xhtml"">
+<head>
+<meta http-equiv=""Content-Type"" content=""text/html; charset=iso-8859-1"" />
+<title>IIS Windows Server</title>
+<style type=""text/css"">
+<!--
+body {
+color:000000;
+background-color:0072C6;
+margin:0;
+}
+
+container {
+margin-left:auto;
+margin-right:auto;
+text-align:center;
+}
+
+a img {
+border:none;
+}
+
+-->
+</style>
+</head>
+<body>
+<div id=""container"">
+<img src=""iisstart.png"" alt=""IIS"" width=""960"" height=""600"" /> (http://go.microsoft.com/fwlink/?linkid=66138&amp;clcid=0x409)
+</div>
+</body>
+</html>","tcp","443","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","86002",,"NAME	VALUE
+(0)CERTIFICATE 0	 
+(0)Version	3 (0x2)
+(0)Serial Number	 67:2e:05:73:de:85:e5:bc:44:73:50:df:20:4b:98:dc 
+(0)Signature Algorithm	sha256WithRSAEncryption
+(0)ISSUER NAME	 
+commonName	PCCS501ZATCWI.vodacom.corp
+(0)SUBJECT NAME	 
+commonName	PCCS501ZATCWI.vodacom.corp
+(0)Valid From	Dec 30 22:01:20 2022 GMT
+(0)Valid Till	Jul 1 22:01:20 2023 GMT
+(0)Public Key Algorithm	rsaEncryption
+(0)RSA Public Key	(2048 bit)
+(0)	 RSA Public-Key: (2048 bit)
+(0)	 Modulus:
+(0)	 00:b5:25:42:b3:5f:21:84:f1:98:9e:42:f5:0c:b0:
+(0)	 ca:1a:8f:61:e5:8e:f9:d1:69:d6:5f:e1:f6:3c:0b:
+(0)	 9a:b2:85:77:4f:cf:d0:f6:7a:ce:f9:3a:f2:f4:a2:
+(0)	 5c:43:4b:39:9b:b8:6a:d4:34:01:87:30:00:e4:0b:
+(0)	 b9:9e:74:fe:8c:28:10:3f:be:68:a1:87:66:aa:5a:
+(0)	 f1:20:6d:43:9f:e6:c0:ec:86:2e:8d:fe:dc:9e:55:
+(0)	 a5:a5:f4:05:f7:22:25:06:c0:da:1c:16:f5:d6:3d:
+(0)	 de:54:02:27:17:59:08:86:c7:1b:a5:be:2b:43:26:
+(0)	 6e:7a:bf:59:21:fc:77:d9:01:e2:5f:05:87:64:11:
+(0)	 7a:91:32:a1:8c:a3:7e:01:8d:06:1c:ea:69:b9:36:
+(0)	 73:52:96:5c:86:4c:a3:c8:01:9c:51:39:4b:b0:85:
+(0)	 da:01:35:00:78:3d:99:50:b4:72:f1:95:28:5e:25:
+(0)	 e5:89:e3:41:53:93:5b:20:3f:81:c7:29:0d:08:33:
+(0)	 6a:31:45:df:3a:82:25:6e:34:70:96:28:07:db:6a:
+(0)	 1f:1c:04:82:ab:c7:db:33:1e:20:b4:6f:88:90:a6:
+(0)	 cc:94:a7:20:49:8b:40:0e:87:79:d9:34:a3:93:bb:
+(0)	 79:29:e4:d0:01:ad:94:1e:c5:fb:b0:f9:62:b6:1c:
+(0)	 97:d3
+(0)	 Exponent: 65537 (0x10001)
+(0)X509v3 EXTENSIONS	 	
+(0)X509v3 Extended Key Usage	 TLS Web Server Authentication
+(0)X509v3 Key Usage	 Key Encipherment, Data Encipherment
+(0)Signature	(256 octets)
+(0)	17:10:06:00:d5:ba:ae:4f:a2:f3:20:dc:f3:f7:86:7b
+(0)	8f:7a:48:25:77:30:20:9a:12:ca:94:ca:73:ff:66:f7
+(0)	5a:e3:16:20:9c:1c:13:07:7d:89:f1:b9:e7:bc:cd:ab
+(0)	85:b6:20:70:b0:aa:c7:d2:06:c5:24:7c:61:2c:c0:f6
+(0)	1e:e7:9e:a5:24:80:1f:08:56:99:15:61:c2:7c:19:73
+(0)	e7:b2:3e:1f:0c:a7:27:2c:62:27:5a:c5:a3:94:0d:f4
+(0)	ba:c8:63:fc:3b:a8:c8:c6:e8:4c:11:5e:e3:95:98:a0
+(0)	de:79:dd:2a:84:6d:41:7e:48:28:37:bf:f8:21:b7:c7
+(0)	eb:4f:d8:34:7d:72:8f:0a:66:94:67:7a:d2:03:87:1e
+(0)	a5:d9:8d:f0:42:80:f6:5b:7f:be:11:f3:ae:63:4b:12
+(0)	84:75:b6:eb:41:e4:89:db:65:26:b4:cb:52:cf:b2:d3
+(0)	fe:51:6b:1c:af:41:95:3e:75:b8:34:eb:46:b1:61:8c
+(0)	eb:ab:3d:fe:62:fa:bb:a1:a0:ec:f2:6c:18:85:ce:03
+(0)	37:73:57:9c:c4:ac:75:96:5b:18:f5:ab:6f:f4:9e:41
+(0)	bc:e7:29:06:e8:df:c6:34:9f:f4:89:43:58:82:67:44
+(0)	7a:db:98:18:9f:e8:84:8a:52:7e:1e:fc:4c:f2:b1:0e","tcp","3389","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38600",,"Certificate 0 CN=PCCS501ZATCWI.vodacom.corp The certificate will expire within six months: Jul  1 22:01:20 2023 GMT","tcp","3389","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38291",,"TLSv1 session caching is enabled on the target.
+TLSv1.1 session caching is enabled on the target.
+TLSv1.2 session caching is enabled on the target.","tcp","3389","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38628",,"TLSv1.0 is supported","tcp","3389","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38794",,"TLSv1.1 is supported","tcp","3389","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","42350",,"TLS Secure Renegotiation Extension Status: supported.","tcp","3389","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38597",,"table	cols=2
+my version	target version
+0304	0303
+0399	0303
+0400	0303
+0499	0303","tcp","3389","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38116",,"CIPHER	KEY-EXCHANGE	AUTHENTICATION	MAC	ENCRYPTION(KEY-STRENGTH)	GRADE
+SSLv2 PROTOCOL IS DISABLED	 	 	 	 	 
+SSLv3 PROTOCOL IS DISABLED	 	 	 	 	 
+TLSv1 PROTOCOL IS ENABLED	 	 	 	 	 
+TLSv1	COMPRESSION METHOD	None	 	 	 
+AES128-SHA	RSA	RSA	SHA1	AES(128)	MEDIUM
+AES256-SHA	RSA	RSA	SHA1	AES(256)	HIGH
+ECDHE-RSA-AES128-SHA	ECDH	RSA	SHA1	AES(128)	MEDIUM
+ECDHE-RSA-AES256-SHA	ECDH	RSA	SHA1	AES(256)	HIGH
+TLSv1.1 PROTOCOL IS ENABLED	 	 	 	 	 
+TLSv1.1	COMPRESSION METHOD	None	 	 	 
+AES128-SHA	RSA	RSA	SHA1	AES(128)	MEDIUM
+AES256-SHA	RSA	RSA	SHA1	AES(256)	HIGH
+ECDHE-RSA-AES128-SHA	ECDH	RSA	SHA1	AES(128)	MEDIUM
+ECDHE-RSA-AES256-SHA	ECDH	RSA	SHA1	AES(256)	HIGH
+TLSv1.2 PROTOCOL IS ENABLED	 	 	 	 	 
+TLSv1.2	COMPRESSION METHOD	None	 	 	 
+AES128-SHA	RSA	RSA	SHA1	AES(128)	MEDIUM
+AES256-SHA	RSA	RSA	SHA1	AES(256)	HIGH
+AES128-GCM-SHA256	RSA	RSA	AEAD	AESGCM(128)	MEDIUM
+AES256-GCM-SHA384	RSA	RSA	AEAD	AESGCM(256)	HIGH
+DHE-RSA-AES128-GCM-SHA256	DH	RSA	AEAD	AESGCM(128)	MEDIUM
+DHE-RSA-AES256-GCM-SHA384	DH	RSA	AEAD	AESGCM(256)	HIGH
+ECDHE-RSA-AES128-SHA	ECDH	RSA	SHA1	AES(128)	MEDIUM
+ECDHE-RSA-AES256-SHA	ECDH	RSA	SHA1	AES(256)	HIGH
+ECDHE-RSA-AES128-SHA256	ECDH	RSA	SHA256	AES(128)	MEDIUM
+ECDHE-RSA-AES256-SHA384	ECDH	RSA	SHA384	AES(256)	HIGH
+ECDHE-RSA-AES256-GCM-SHA384	ECDH	RSA	AEAD	AESGCM(256)	HIGH
+AES128-SHA256	RSA	RSA	SHA256	AES(128)	MEDIUM
+AES256-SHA256	RSA	RSA	SHA256	AES(256)	HIGH
+TLSv1.3 PROTOCOL IS DISABLED","tcp","3389","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38704",,"CIPHER	NAME	GROUP	KEY-SIZE	FORWARD-SECRET	CLASSICAL-STRENGTH	QUANTUM-STRENGTH
+TLSv1	 	 	 	 	 	 
+AES256-SHA	RSA	 	2048	no	110	low
+AES128-SHA	RSA	 	2048	no	110	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp256r1	256	yes	128	low
+TLSv1.1	 	 	 	 	 	 
+AES256-SHA	RSA	 	2048	no	110	low
+AES128-SHA	RSA	 	2048	no	110	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp256r1	256	yes	128	low
+TLSv1.2	 	 	 	 	 	 
+AES256-SHA256	RSA	 	2048	no	110	low
+AES128-SHA256	RSA	 	2048	no	110	low
+AES256-GCM-SHA384	RSA	 	2048	no	110	low
+AES128-GCM-SHA256	RSA	 	2048	no	110	low
+AES256-SHA	RSA	 	2048	no	110	low
+AES128-SHA	RSA	 	2048	no	110	low
+DHE-RSA-AES256-GCM-SHA384	DHE	 	2048	yes	110	low
+DHE-RSA-AES128-GCM-SHA256	DHE	 	2048	yes	110	low
+ECDHE-RSA-AES256-GCM-SHA384	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES256-GCM-SHA384	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES256-SHA384	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES256-SHA384	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES128-SHA256	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES128-SHA256	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES256-SHA	ECDHE	secp256r1	256	yes	128	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp384r1	384	yes	192	low
+ECDHE-RSA-AES128-SHA	ECDHE	secp256r1	256	yes	128	low","tcp","3389","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38706",,"NAME	STATUS
+TLSv1	 
+Extended Master Secret	yes
+Encrypt Then MAC	no
+Heartbeat	no
+Truncated HMAC	no
+Cipher priority controlled by	server
+OCSP stapling	no
+SCT extension	no
+TLSv1.1	 
+Extended Master Secret	yes
+Encrypt Then MAC	no
+Heartbeat	no
+Truncated HMAC	no
+Cipher priority controlled by	server
+OCSP stapling	no
+SCT extension	no
+TLSv1.2	 
+Extended Master Secret	yes
+Encrypt Then MAC	no
+Heartbeat	no
+Truncated HMAC	no
+Cipher priority controlled by	server
+OCSP stapling	no
+SCT extension	no","tcp","3389","yes",,,
+"10.132.122.35","pccs501zatcwi.vodacom.corp","PCCS501ZATCWI","38173",,"Certificate 0 CN=PCCS501ZATCWI.vodacom.corp self signed certificate","tcp","3389","yes",,,
