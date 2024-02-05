@@ -39,7 +39,8 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 import React, { useState } from 'react';
-import './ComparisonTool.scss'; // Assuming SCSS is set up
+import { Select, Button } from 'antd';
+import 'antd/dist/antd.css'; // Import Ant Design stylesheet
 
 interface ISelections {
   application: string;
@@ -47,6 +48,8 @@ interface ISelections {
   baseBranch: string;
   branchToCompare: string;
 }
+
+const { Option } = Select; // Destructure Option from Select for convenience
 
 const ComparisonTool: React.FC = () => {
   const [selections, setSelections] = useState<ISelections>({
@@ -63,8 +66,8 @@ const ComparisonTool: React.FC = () => {
 
   const commonOptions = ['develop', 'main', 'feature'];
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = event.target;
+  const handleSelectChange = (value: string, option: any) => {
+    const name = option.name;
     setSelections(prevSelections => ({
       ...prevSelections,
       [name]: value,
@@ -81,61 +84,59 @@ const ComparisonTool: React.FC = () => {
 
   return (
     <div className="comparison-tool">
-      <div className="dropdown">
-        <label htmlFor="application">Application:</label>
-        <select name="application" value={selections.application} onChange={handleSelectChange}>
-          <option value="">Select Application</option>
-          <option value="WIBSV">WIBSV</option>
-          <option value="WIBAC">WIBAC</option>
-        </select>
-      </div>
+      <Select
+        style={{ width: 200, marginBottom: 16 }}
+        placeholder="Select Application"
+        value={selections.application}
+        onChange={(value, option) => handleSelectChange(value, option)}
+        name="application"
+      >
+        <Option value="WIBSV">WIBSV</Option>
+        <Option value="WIBAC">WIBAC</Option>
+      </Select>
 
-      <div className="dropdown">
-        <label htmlFor="module">Module:</label>
-        <select 
-          name="module" 
-          value={selections.module} 
-          onChange={handleSelectChange}
-          disabled={!selections.application} // Disable until an application is selected
-        >
-          <option value="">Select Module</option>
-          {selections.application && moduleOptions[selections.application].map(option => (
-            <option key={option} value={option}>{option}</option>
-          ))}
-        </select>
-      </div>
+      <Select
+        style={{ width: 200, marginBottom: 16 }}
+        placeholder="Select Module"
+        value={selections.module}
+        onChange={(value, option) => handleSelectChange(value, option)}
+        name="module"
+        disabled={!selections.application}
+      >
+        {selections.application && moduleOptions[selections.application].map(option => (
+          <Option key={option} value={option}>{option}</Option>
+        ))}
+      </Select>
 
-      <div className="dropdown">
-        <label htmlFor="baseBranch">Base Branch:</label>
-        <select 
-          name="baseBranch" 
-          value={selections.baseBranch} 
-          onChange={handleSelectChange}
-          disabled={!selections.module} // Disable until a module is selected
-        >
-          <option value="">Select Base Branch</option>
-          {commonOptions.map(option => (
-            <option key={option} value={option}>{option}</option>
-          ))}
-        </select>
-      </div>
+      <Select
+        style={{ width: 200, marginBottom: 16 }}
+        placeholder="Select Base Branch"
+        value={selections.baseBranch}
+        onChange={(value, option) => handleSelectChange(value, option)}
+        name="baseBranch"
+        disabled={!selections.module}
+      >
+        {commonOptions.map(option => (
+          <Option key={option} value={option}>{option}</Option>
+        ))}
+      </Select>
 
-      <div className="dropdown">
-        <label htmlFor="branchToCompare">Branch to Compare:</label>
-        <select 
-          name="branchToCompare" 
-          value={selections.branchToCompare} 
-          onChange={handleSelectChange}
-          disabled={!selections.baseBranch} // Disable until a base branch is selected
-        >
-          <option value="">Select Branch to Compare</option>
-          {commonOptions.map(option => (
-            <option key={option} value={option}>{option}</option>
-          ))}
-        </select>
-      </div>
+      <Select
+        style={{ width: 200, marginBottom: 16 }}
+        placeholder="Select Branch to Compare"
+        value={selections.branchToCompare}
+        onChange={(value, option) => handleSelectChange(value, option)}
+        name="branchToCompare"
+        disabled={!selections.baseBranch}
+      >
+        {commonOptions.map(option => (
+          <Option key={option} value={option}>{option}</Option>
+        ))}
+      </Select>
 
-      <button onClick={fetchResults} disabled={!allSelected}>Compare</button>
+      <Button type="primary" onClick={fetchResults} disabled={!allSelected}>
+        Compare
+      </Button>
     </div>
   );
 };
