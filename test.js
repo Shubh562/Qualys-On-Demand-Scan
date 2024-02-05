@@ -38,45 +38,50 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
-/* ComparisonTool.scss */
-$btn-bg-color: #007bff;
-$btn-bg-hover-color: #0056b3;
+import React, { useState } from 'react';
+import './ComparisonTool.css'; // Ensure this path matches your CSS file's location
 
-.comparison-tool {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: 10px;
-  padding: 20px;
-
-  .dropdown {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-
-    label {
-      font-weight: bold;
-    }
-
-    select {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      width: 250px;
-    }
-  }
-
-  button {
-    padding: 10px 20px;
-    background-color: $btn-bg-color;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-
-    &:hover {
-      background-color: $btn-bg-hover-color;
-    }
-  }
+interface ISelections {
+  application: string;
+  module: string;
+  baseBranch: string;
+  branchToCompare: string;
 }
+
+const ComparisonTool: React.FC = () => {
+  const [selections, setSelections] = useState<ISelections>({
+    application: '',
+    module: '',
+    baseBranch: '',
+    branchToCompare: '',
+  });
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setSelections(prevSelections => ({
+      ...prevSelections,
+      [name]: value,
+    }));
+  };
+
+  // Your fetchResults function and other logic here
+
+  return (
+    <div className="comparison-tool">
+      <div className="dropdown">
+        <label htmlFor="application">Application:</label>
+        <select name="application" value={selections.application} onChange={handleSelectChange}>
+          <option value="">Select Application</option>
+          {/* Populate with actual options here */}
+        </select>
+      </div>
+
+      {/* Repeat for other dropdowns */}
+
+      <button onClick={() => {}}>Compare</button>
+      {/* Your table rendering logic */}
+    </div>
+  );
+};
+
+export default ComparisonTool;
