@@ -39,7 +39,7 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 import React, { useState } from 'react';
-import './ComparisonTool.css'; // Ensure this path matches your CSS file's location
+import './ComparisonTool.scss'; // Updated for SCSS file
 
 interface ISelections {
   application: string;
@@ -64,7 +64,11 @@ const ComparisonTool: React.FC = () => {
     }));
   };
 
-  // Your fetchResults function and other logic here
+  // Placeholder for the fetchResults function
+  const fetchResults = async () => {
+    // Placeholder for fetching data based on selections
+    console.log('Fetching data...', selections);
+  };
 
   return (
     <div className="comparison-tool">
@@ -76,10 +80,32 @@ const ComparisonTool: React.FC = () => {
         </select>
       </div>
 
-      {/* Repeat for other dropdowns */}
+      <div className="dropdown">
+        <label htmlFor="module">Module:</label>
+        <select name="module" value={selections.module} onChange={handleSelectChange}>
+          <option value="">Select Module</option>
+          {/* Populate with actual options here */}
+        </select>
+      </div>
 
-      <button onClick={() => {}}>Compare</button>
-      {/* Your table rendering logic */}
+      <div className="dropdown">
+        <label htmlFor="baseBranch">Base Branch:</label>
+        <select name="baseBranch" value={selections.baseBranch} onChange={handleSelectChange}>
+          <option value="">Select Base Branch</option>
+          {/* Populate with actual options here */}
+        </select>
+      </div>
+
+      <div className="dropdown">
+        <label htmlFor="branchToCompare">Branch to Compare:</label>
+        <select name="branchToCompare" value={selections.branchToCompare} onChange={handleSelectChange}>
+          <option value="">Select Branch to Compare</option>
+          {/* Populate with actual options here */}
+        </select>
+      </div>
+
+      <button onClick={fetchResults}>Compare</button>
+      {/* Placeholder for the results table */}
     </div>
   );
 };
