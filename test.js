@@ -39,7 +39,7 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 import React, { useState } from 'react';
-import './ComparisonTool.scss'; // Updated for SCSS file
+import './ComparisonTool.scss'; // Assuming SCSS is set up
 
 interface ISelections {
   application: string;
@@ -56,19 +56,28 @@ const ComparisonTool: React.FC = () => {
     branchToCompare: '',
   });
 
+  const moduleOptions = {
+    WIBSV: ['wibsv-web', 'wibsv-card-management', 'wibsv-core', 'wibsv-profile-and-settings'],
+    WIBAC: ['wibac-accounts', 'wibac-securewf-core', 'wibac-securewf-core-delegates', 'wibac-securewf-core-components'],
+  };
+
+  const commonOptions = ['develop', 'main', 'feature'];
+
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
     setSelections(prevSelections => ({
       ...prevSelections,
       [name]: value,
+      ...(name === 'application' && { module: '' }), // Reset module when application changes
     }));
   };
 
-  // Placeholder for the fetchResults function
   const fetchResults = async () => {
-    // Placeholder for fetching data based on selections
-    console.log('Fetching data...', selections);
+    // Implement fetching logic here
+    console.log('Comparing...', selections);
   };
+
+  const allSelected = Object.values(selections).every(value => value !== '');
 
   return (
     <div className="comparison-tool">
@@ -76,36 +85,57 @@ const ComparisonTool: React.FC = () => {
         <label htmlFor="application">Application:</label>
         <select name="application" value={selections.application} onChange={handleSelectChange}>
           <option value="">Select Application</option>
-          {/* Populate with actual options here */}
+          <option value="WIBSV">WIBSV</option>
+          <option value="WIBAC">WIBAC</option>
         </select>
       </div>
 
       <div className="dropdown">
         <label htmlFor="module">Module:</label>
-        <select name="module" value={selections.module} onChange={handleSelectChange}>
+        <select 
+          name="module" 
+          value={selections.module} 
+          onChange={handleSelectChange}
+          disabled={!selections.application} // Disable until an application is selected
+        >
           <option value="">Select Module</option>
-          {/* Populate with actual options here */}
+          {selections.application && moduleOptions[selections.application].map(option => (
+            <option key={option} value={option}>{option}</option>
+          ))}
         </select>
       </div>
 
       <div className="dropdown">
         <label htmlFor="baseBranch">Base Branch:</label>
-        <select name="baseBranch" value={selections.baseBranch} onChange={handleSelectChange}>
+        <select 
+          name="baseBranch" 
+          value={selections.baseBranch} 
+          onChange={handleSelectChange}
+          disabled={!selections.module} // Disable until a module is selected
+        >
           <option value="">Select Base Branch</option>
-          {/* Populate with actual options here */}
+          {commonOptions.map(option => (
+            <option key={option} value={option}>{option}</option>
+          ))}
         </select>
       </div>
 
       <div className="dropdown">
         <label htmlFor="branchToCompare">Branch to Compare:</label>
-        <select name="branchToCompare" value={selections.branchToCompare} onChange={handleSelectChange}>
+        <select 
+          name="branchToCompare" 
+          value={selections.branchToCompare} 
+          onChange={handleSelectChange}
+          disabled={!selections.baseBranch} // Disable until a base branch is selected
+        >
           <option value="">Select Branch to Compare</option>
-          {/* Populate with actual options here */}
+          {commonOptions.map(option => (
+            <option key={option} value={option}>{option}</option>
+          ))}
         </select>
       </div>
 
-      <button onClick={fetchResults}>Compare</button>
-      {/* Placeholder for the results table */}
+      <button onClick={fetchResults} disabled={!allSelected}>Compare</button>
     </div>
   );
 };
