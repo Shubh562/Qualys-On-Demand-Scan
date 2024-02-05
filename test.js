@@ -38,114 +38,96 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
+// Import React and useState hook at the beginning of your file
 import React, { useState } from 'react';
-
-// Define TypeScript interfaces for the state
-interface ISelections {
-  application: string;
-  module: string;
-  baseBranch: string;
-  branchToCompare: string;
-}
-
-interface IApiResponseItem {
-  // Define your API response structure here
-  // Example:
-  id: number;
-  detail: string;
-  result: string;
-}
+import './ComparisonTool.css'; // Import CSS for styling
 
 const ComparisonTool: React.FC = () => {
-  // State for storing dropdown selections
-  const [selections, setSelections] = useState<ISelections>({
-    application: '',
-    module: '',
-    baseBranch: '',
-    branchToCompare: '',
-  });
-
-  // State for storing API response data
-  const [results, setResults] = useState<IApiResponseItem[]>([]);
-
-  // Handler for dropdown change
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setSelections(prevSelections => ({
-      ...prevSelections,
-      [name]: value,
-    }));
-  };
-
-  // Fetch results from API
-  const fetchResults = async () => {
-    try {
-      const response = await fetch('/api/compare', {
-        method: 'POST', // Adjust according to your API requirements
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(selections),
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data: IApiResponseItem[] = await response.json();
-      setResults(data);
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-    }
-  };
-
-  // Render component
+  // Your existing state and functions remain here
+  
+  // Updated render section with labels
   return (
-    <div>
-      <select name="application" value={selections.application} onChange={handleSelectChange}>
-        <option value="">Select Application</option>
-        {/* Populate with actual options */}
-      </select>
+    <div className="comparison-tool">
+      <div className="dropdown">
+        <label htmlFor="application">Application:</label>
+        <select name="application" value={selections.application} onChange={handleSelectChange}>
+          <option value="">Select Application</option>
+          {/* Add your options here */}
+        </select>
+      </div>
 
-      <select name="module" value={selections.module} onChange={handleSelectChange}>
-        <option value="">Select Module</option>
-        {/* Populate with actual options */}
-      </select>
+      <div className="dropdown">
+        <label htmlFor="module">Module:</label>
+        <select name="module" value={selections.module} onChange={handleSelectChange}>
+          <option value="">Select Module</option>
+          {/* Add your options here */}
+        </select>
+      </div>
 
-      <select name="baseBranch" value={selections.baseBranch} onChange={handleSelectChange}>
-        <option value="">Select Base Branch</option>
-        {/* Populate with actual options */}
-      </select>
+      <div className="dropdown">
+        <label htmlFor="baseBranch">Base Branch:</label>
+        <select name="baseBranch" value={selections.baseBranch} onChange={handleSelectChange}>
+          <option value="">Select Base Branch</option>
+          {/* Add your options here */}
+        </select>
+      </div>
 
-      <select name="branchToCompare" value={selections.branchToCompare} onChange={handleSelectChange}>
-        <option value="">Select Branch to Compare</option>
-        {/* Populate with actual options */}
-      </select>
+      <div className="dropdown">
+        <label htmlFor="branchToCompare">Branch to Compare:</label>
+        <select name="branchToCompare" value={selections.branchToCompare} onChange={handleSelectChange}>
+          <option value="">Select Branch to Compare</option>
+          {/* Add your options here */}
+        </select>
+      </div>
 
       <button onClick={fetchResults}>Compare</button>
-
-      {results.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              {/* Dynamically generate table headers based on the first result keys */}
-              {Object.keys(results[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {results.map((result, index) => (
-              <tr key={index}>
-                {Object.values(result).map((value, idx) => (
-                  <td key={idx}>{value}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      
+      {/* Your existing table rendering code here */}
     </div>
   );
 };
 
 export default ComparisonTool;
 
+
+
+
+/* ComparisonTool.css */
+.comparison-tool {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 10px;
+  padding: 20px;
+}
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dropdown label {
+  font-weight: bold;
+}
+
+.dropdown select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 250px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
