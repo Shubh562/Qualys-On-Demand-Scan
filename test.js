@@ -38,7 +38,6 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
-// ComparisonTool.tsx
 import React, { useState } from 'react';
 import './ComparisonTool.scss'; // Adjust the path as needed to match your project structure
 
@@ -66,18 +65,12 @@ const ComparisonTool: React.FC = () => {
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
-    setSelections(prev => ({
-      ...prev,
+    setSelections(prevSelections => ({
+      ...prevSelections,
       [name]: value,
       ...(name === 'application' && { module: '' }), // Reset module when application changes
     }));
   };
-
-  const fetchResults = async () => {
-    console.log('Comparing...', selections);
-  };
-
-  const allSelected = Object.values(selections).every(value => value !== '');
 
   return (
     <div className="comparison-tool">
@@ -91,15 +84,14 @@ const ComparisonTool: React.FC = () => {
             disabled={index !== 0 && !selections['application'] || index === 2 && !selections['module'] || index === 3 && !selections['baseBranch']}
           >
             <option value="">Select {field.charAt(0).toUpperCase() + field.slice(1)}</option>
-            {(field === 'module' && selections.application && moduleOptions[selections.application] ||
-             field !== 'module' && commonOptions).map(option => (
+            {(field === 'module' && selections.application ? moduleOptions[selections.application] : commonOptions).map((option: string) => (
               <option key={option} value={option}>{option}</option>
             ))}
           </select>
         </div>
       ))}
 
-      <button className="compare-button" onClick={fetchResults} disabled={!allSelected}>
+      <button className="compare-button" onClick={() => console.log('Comparing...', selections)} disabled={Object.values(selections).every(value => value !== '')}>
         Compare
       </button>
     </div>
@@ -107,53 +99,3 @@ const ComparisonTool: React.FC = () => {
 };
 
 export default ComparisonTool;
-
-
-
-
-
-
-
-// ComparisonTool.scss
-.comparison-tool {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  max-width: 400px; // Adjust based on your preference
-
-  .dropdown {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-
-    label {
-      font-weight: bold;
-    }
-
-    select {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      &:disabled {
-        background-color: #f0f0f0;
-      }
-    }
-  }
-
-  .compare-button {
-    padding: 10px 20px;
-    border-radius: 4px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    width: auto; // Allows the button to size based on content rather than stretching
-    &:disabled {
-      background-color: #ccc;
-      color: #666;
-      cursor: not-allowed;
-    }
-  }
-}
