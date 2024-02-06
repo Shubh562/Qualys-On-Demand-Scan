@@ -161,3 +161,72 @@ const ComparisonTool: React.FC = () => {
 
 
 export default ComparisonTool;
+
+
+
+
+
+
+// ComparisonTool.scss
+.comparison-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+
+  .selections-area, .results-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .dropdown {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin-bottom: 5px;
+    }
+
+    select {
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    select:disabled {
+      background-color: #eee;
+    }
+  }
+
+  .compare-button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    width: auto;
+    align-self: start;
+  }
+
+  .results-table {
+    border-collapse: collapse;
+    width: 100%;
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+    td:nth-child(odd) {
+      background-color: #f2f2f2;
+    }
+    td:nth-child(even) {
+      background-color: #fff;
+    }
+  }
+}
+
