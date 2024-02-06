@@ -78,59 +78,86 @@ const ComparisonTool: React.FC = () => {
 
   const allSelected = Object.values(selections).every(value => value !== '');
 
-  return (
-    <div className="comparison-container">
-      <div className="selections-area">
-        <div className="dropdown">
-          <label htmlFor="application">Application</label>
-          <select name="application" value={selections.application} onChange={(e) => setSelections({...selections, application: e.target.value, module: '', baseBranch: '', branchToCompare: ''})}>
-            <option value="">Select Application</option>
-            <option value="WIBSV">WIBSV</option>
-            <option value="WIBAC">WIBAC</option>
-          </select>
-        </div>
-
-        <div className="dropdown">
-          <label htmlFor="module">Module</label>
-          <select name="module" value={selections.module} onChange={(e) => setSelections({...selections, module: e.target.value})} disabled={!selections.application}>
-            <option value="">Select Module</option>
-            {/* Options are dynamically rendered based on the application selection */}
-          </select>
-        </div>
-
-        {/* Repeat the above structure for baseBranch and branchToCompare dropdowns with commonOptions */}
-
-        <button className="compare-button" onClick={handleCompareClick} disabled={!allSelected}>
-          Compare
-        </button>
+   return (
+  <div className="comparison-container">
+    <div className="selections-area">
+      {/* Application Dropdown */}
+      <div className="dropdown">
+        <label htmlFor="application">Application</label>
+        <select name="application" value={selections.application} onChange={(e) => setSelections({...selections, application: e.target.value, module: '', baseBranch: '', branchToCompare: ''})}>
+          <option value="">Select Application</option>
+          <option value="WIBSV">WIBSV</option>
+          <option value="WIBAC">WIBAC</option>
+        </select>
       </div>
 
-      {showTable && (
-        <div className="results-area">
-          <table className="results-table">
-            <thead>
-              <tr>
-                <th>Module</th>
-                <th>Modified</th>
-                <th>Dependency Changed</th>
-                <th>Mapped Test Cases</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mockData.map((data, index) => (
-                <tr key={index}>
-                  <td>{data.module}</td>
-                  <td>{data.modified}</td>
-                  <td>{data.dependency}</td>
-                  <td>{data.testCases}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      {/* Module Dropdown */}
+      <div className="dropdown">
+        <label htmlFor="module">Module</label>
+        <select name="module" value={selections.module} onChange={(e) => setSelections({...selections, module: e.target.value, baseBranch: '', branchToCompare: ''})} disabled={!selections.application}>
+          <option value="">Select Module</option>
+          {/* Dynamically render options based on the selected application */}
+        </select>
+      </div>
+
+      {/* Base Branch Dropdown */}
+      <div className="dropdown">
+        <label htmlFor="baseBranch">Base Branch</label>
+        <select name="baseBranch" value={selections.baseBranch} onChange={(e) => setSelections({...selections, baseBranch: e.target.value, branchToCompare: ''})} disabled={!selections.module}>
+          <option value="">Select Base Branch</option>
+          {/* Common options for branches */}
+          <option value="develop">develop</option>
+          <option value="main">main</option>
+          <option value="feature">feature</option>
+        </select>
+      </div>
+
+      {/* Branch to Compare Dropdown */}
+      <div className="dropdown">
+        <label htmlFor="branchToCompare">Branch to Compare</label>
+        <select name="branchToCompare" value={selections.branchToCompare} onChange={(e) => setSelections({...selections, branchToCompare: e.target.value})} disabled={!selections.baseBranch}>
+          <option value="">Select Branch to Compare</option>
+          {/* Common options for branches */}
+          <option value="develop">develop</option>
+          <option value="main">main</option>
+          <option value="feature">feature</option>
+        </select>
+      </div>
+
+      {/* Compare Button */}
+      <button className="compare-button" onClick={handleCompareClick} disabled={!allSelected}>
+        Compare
+      </button>
     </div>
-  );
+
+    {/* Results Table */}
+    {showTable && (
+      <div className="results-area">
+        <table className="results-table">
+          <thead>
+            <tr>
+              <th>Module</th>
+              <th>Modified</th>
+              <th>Dependency Changed</th>
+              <th>Mapped Test Cases</th>
+            </tr>
+          </thead>
+          <tbody>
+            {mockData.map((data, index) => (
+              <tr key={index}>
+                <td>{data.module}</td>
+                <td>{data.modified}</td>
+                <td>{data.dependency}</td>
+                <td>{data.testCases}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+);
 };
+
 
 export default ComparisonTool;
