@@ -41,23 +41,18 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 // ComparisonTool.scss
 .comparison-container {
   display: flex;
-  gap: 30px; /* Adjust the gap between the selections area and the results area */
-  padding: 20px; /* Padding around the entire container */
+  gap: 30px; /* Space between selections area and results area */
+  padding: 20px;
 
   .selections-area {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Increase the gap between dropdowns for better visual separation */
-    width: 100%;
-    max-width: 400px; /* Adjust the maximum width of the dropdown area as needed */
+    flex: 1; /* Allows this area to take up the space it needs, up to its max-width */
+    max-width: 400px; /* Maximum width for the dropdown area, adjust as needed */
   }
 
   .results-area {
-    flex-grow: 1; /* Allows the results area to expand and fill the remaining space */
-    padding: 20px; /* Padding inside the results area around the table */
-    background-color: #f9f9f9; /* Optional background color for visual separation */
-    border-radius: 8px; /* Rounds the corners of the results area */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    flex: 2; /* Allows the results area to expand and fill the remaining space */
+    padding: 20px;
+    overflow-x: auto; /* Adds horizontal scrolling if the table exceeds the area's width */
   }
 }
 
@@ -92,4 +87,36 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
   width: fit-content; /* Adjust button width to fit its content */
   margin-top: 20px; /* Ensure sufficient space above the button for clear separation */
   align-self: center; /* Center-align the button relative to the selections-area */
+}
+.results-table {
+  width: 100%; /* Ensures the table expands to fill its container */
+  margin-top: 20px; /* Adds space above the table for separation */
+  border-collapse: collapse;
+
+  th, td {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #007bff;
+    color: white;
+  }
+
+  tr:nth-child(even) td {
+    background-color: #f2f2f2; /* Alternating row background for better readability */
+  }
+
+  tr:nth-child(odd) td {
+    background-color: #ffffff;
+  }
+
+  /* Ensure column styling is consistent and visually separated */
+  td:nth-child(odd) {
+    background-color: #f9f9f9; /* Light grey for odd columns */
+  }
+  td:nth-child(even) {
+    background-color: #ffffff; /* White for even columns */
+  }
 }
