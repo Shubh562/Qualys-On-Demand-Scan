@@ -41,40 +41,44 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 // ComparisonTool.scss
 .comparison-container {
   display: flex;
-  gap: 20px; /* Adjust gap between selections area and results area */
-  padding: 20px; /* Padding around the entire container for spacing */
+  gap: 30px; /* Adjust the gap between the selections area and the results area */
+  padding: 20px; /* Padding around the entire container */
 
   .selections-area {
-    flex: 1; /* Allows the selections area to take the necessary space */
-    max-width: 400px; /* Maximum width for the dropdown area */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Increase the gap between dropdowns for better visual separation */
+    width: 100%;
+    max-width: 400px; /* Adjust the maximum width of the dropdown area as needed */
   }
 
   .results-area {
-    flex: 2; /* Allows the results area to take up twice the space of the selections area, filling the remaining space */
-    padding: 20px; /* Padding inside the results area for spacing around the table */
-    background-color: #f9f9f9; /* Optional: Adds a slight background color for visual separation */
-    border-radius: 8px; /* Optional: Rounds the corners of the results area */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: Adds a subtle shadow for depth */
+    flex-grow: 1; /* Allows the results area to expand and fill the remaining space */
+    padding: 20px; /* Padding inside the results area around the table */
+    background-color: #f9f9f9; /* Optional background color for visual separation */
+    border-radius: 8px; /* Rounds the corners of the results area */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
   }
 }
 
 .dropdown {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  width: 100%; /* Ensure dropdowns use the full width available */
 
   label {
-    font-weight: bold;
+    margin-bottom: 5px; /* Space between label and dropdown */
   }
 
   select {
     padding: 8px;
-    border-radius: 4px;
     border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff; /* Ensures consistency in background color */
   }
 
   select:disabled {
-    background-color: #eee;
+    background-color: #eee; /* Distinguish disabled dropdowns visually */
   }
 }
 
@@ -85,30 +89,7 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
   background-color: #007bff;
   color: white;
   cursor: pointer;
-  width: auto; /* Button width is automatically adjusted */
-  align-self: flex-start; /* Aligns the button to the start of the flex container */
-}
-
-.results-table {
-  width: 100%; /* Table fills the width of the results area */
-  border-collapse: collapse;
-
-  th, td {
-    padding: 8px;
-    text-align: left;
-    border: 1px solid #ddd;
-  }
-
-  th {
-    background-color: #007bff;
-    color: white;
-  }
-
-  td:nth-child(odd) {
-    background-color: #f2f2f2;
-  }
-
-  td:nth-child(even) {
-    background-color: #fff;
-  }
+  width: fit-content; /* Adjust button width to fit its content */
+  margin-top: 20px; /* Ensure sufficient space above the button for clear separation */
+  align-self: center; /* Center-align the button relative to the selections-area */
 }
