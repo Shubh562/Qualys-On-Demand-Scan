@@ -38,85 +38,117 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
-// ComparisonTool.scss
-.comparison-container {
-  display: flex;
-  gap: 30px; /* Space between selections area and results area */
-  padding: 20px;
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './ComparisonTool.scss'; // Ensure this import path is correct
 
-  .selections-area {
-    flex: 1; /* Allows this area to take up the space it needs, up to its max-width */
-    max-width: 400px; /* Maximum width for the dropdown area, adjust as needed */
-  }
-
-  .results-area {
-    flex: 2; /* Allows the results area to expand and fill the remaining space */
-    padding: 20px;
-    overflow-x: auto; /* Adds horizontal scrolling if the table exceeds the area's width */
-  }
+interface ISelections {
+  application: string;
+  module: string;
+  release: string; // Updated to use release instead of branchToCompare
 }
 
-.dropdown {
-  display: flex;
-  flex-direction: column;
-  width: 100%; /* Ensure dropdowns use the full width available */
-
-  label {
-    margin-bottom: 5px; /* Space between label and dropdown */
-  }
-
-  select {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff; /* Ensures consistency in background color */
-  }
-
-  select:disabled {
-    background-color: #eee; /* Distinguish disabled dropdowns visually */
-  }
+interface IReleaseData {
+  release: string;
+  module_name: string[];
+  testcases: string[];
+  dependency: string[];
+  testcases_not_run: string[];
 }
 
-.compare-button {
-  padding: 10px 20px;
-  border-radius: 4px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  width: fit-content; /* Adjust button width to fit its content */
-  margin-top: 20px; /* Ensure sufficient space above the button for clear separation */
-  align-self: center; /* Center-align the button relative to the selections-area */
-}
-.results-table {
-  width: 100%; /* Ensures the table expands to fill its container */
-  margin-top: 20px; /* Adds space above the table for separation */
-  border-collapse: collapse;
+const ComparisonTool: React.FC = () => {
+  const [selections, setSelections] = useState<ISelections>({
+    application: 'WIBSV', // Default to WIBSV as it's the only option
+    module: 'card-management', // Default to card-management as it's the only option
+    release: '',
+  });
+  const [releaseData, setReleaseData] = useState<IReleaseData | null>(null);
+  const [showTable, setShowTable] = useState<boolean>(false);
 
-  th, td {
-    text-align: left;
-    padding: 8px;
-    border: 1px solid #ddd;
-  }
+  const handleCompareClick = async () => {
+    if (selections.release) {
+      try {
+        const response = await axios.get(`http://localhost:5000/data/release/${selections.release}`);
+        setReleaseData(response.data);
+        setShowTable(true); // Show the table on successful data fetch
+      } catch (error) {
+        console.error("Error fetching release data:", error);
+        alert("Failed to fetch release data");
+      }
+    }
+  };
 
-  th {
-    background-color: #007bff;
-    color: white;
-  }
+  // Ensure dependencies dropdown is filled correctly
+  useEffect(() => {
+    if (selections.application && selections.module) {
+      // Potentially fetch and set available releases dynamically
+      // For now, the release options are hard-coded
+    }
+  }, [selections.application, selections.module]);
 
-  tr:nth-child(even) td {
-    background-color: #f2f2f2; /* Alternating row background for better readability */
-  }
+  return (
+    <div className="comparison-container">
+      <div className="selections-area">
+        {/* Application Dropdown */}
+        <div className="dropdown">
+          <label htmlFor="application">Application</label>
+          <select name="application" value={selections.application} onChange={(e) => setSelections({...selections, application: e.target.value})}>
+            <option value="WIBSV">WIBSV</option>
+          </select>
+        </div>
 
-  tr:nth-child(odd) td {
-    background-color: #ffffff;
-  }
+        {/* Module Dropdown */}
+        <div className="dropdown">
+          <label htmlFor="module">Module</label>
+          <select name="module" value={selections.module} onChange={(e) => setSelections({...selections, module: e.target.value})}>
+            <option value="card-management">Card Management</option>
+          </select>
+        </div>
 
-  /* Ensure column styling is consistent and visually separated */
-  td:nth-child(odd) {
-    background-color: #f9f9f9; /* Light grey for odd columns */
-  }
-  td:nth-child(even) {
-    background-color: #ffffff; /* White for even columns */
-  }
-}
+        {/* Release Dropdown */}
+        <div className="dropdown">
+          <label htmlFor="release">Release</label>
+          <select name="release" value={selections.release} onChange={(e) => setSelections({...selections, release: e.target.value})}>
+            <option value="">Select Release</option>
+            <option value="R24.01.00">R24.01.00</option>
+            <option value="R23.12.00">R23.12.00</option>
+            <option value="R23.11.00">R23.11.00</option>
+          </select>
+        </div>
+
+        {/* Compare Button */}
+        <button className="compare-button" onClick={handleCompareClick} disabled={!selections.release}>
+          Compare
+        </button>
+      </div>
+
+      {/* Results Table */}
+      {showTable && releaseData && (
+        <div className="results-area">
+          <table className="results-table">
+            <thead>
+              <tr>
+                <th>Release</th>
+                <th>Module Name</th>
+                <th>Dependencies</th>
+                <th>Test Cases</th>
+                <th>Test Cases Not Run</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{releaseData.release}</td>
+                <td>{releaseData.module_name.join(", ")}</td>
+                <td>{releaseData.dependency.join(", ")}</td>
+                <td>{releaseData.testcases.join(", ")}</td>
+                <td>{releaseData.testcases_not_run.join(", ")}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ComparisonTool;
