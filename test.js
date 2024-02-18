@@ -160,3 +160,79 @@ const ComparisonTool: React.FC = () => {
 };
 
 export default ComparisonTool;
+
+
+
+
+
+.comparison-container {
+  font-family: Arial, sans-serif;
+  max-width: 100%;
+  margin: 20px auto;
+  overflow-x: auto;
+}
+
+.selections-area {
+  margin-bottom: 20px;
+}
+
+.dropdown {
+  margin-right: 10px;
+  label {
+    margin-right: 5px;
+  }
+  select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+  }
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  th, td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #007bff;
+    color: white;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+
+  tr:hover {
+    background-color: #f2f2f2;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+}
+
+.compare-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #0056b3;
+  }
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+}
+
