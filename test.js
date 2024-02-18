@@ -40,109 +40,103 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './ComparisonTool.scss'; // Ensure this import path is correct
+import './ComparisonTool.scss';
 
 interface ISelections {
   application: string;
   module: string;
-  release: string; // Updated to use release instead of branchToCompare
+  release: string;
+  dependency: string; // Renaming for clarity
+}
+
+interface IModuleData {
+  name: string;
+  testcases: string[];
+  testcasesNotRunned: string[];
+  dependency: string[];
 }
 
 interface IReleaseData {
+  _id: string;
   release: string;
-  module_name: string[];
-  testcases: string[];
-  dependency: string[];
-  testcases_not_run: string[];
+  data: IModuleData[];
 }
 
 const ComparisonTool: React.FC = () => {
   const [selections, setSelections] = useState<ISelections>({
-    application: 'WIBSV', // Default to WIBSV as it's the only option
-    module: 'card-management', // Default to card-management as it's the only option
+    application: 'WIBSV',
+    module: '',
     release: '',
+    dependency: '', // Initially empty, will store the module name
   });
   const [releaseData, setReleaseData] = useState<IReleaseData | null>(null);
   const [showTable, setShowTable] = useState<boolean>(false);
 
-  const handleCompareClick = async () => {
+  useEffect(() => {
     if (selections.release) {
-      try {
-        const response = await axios.get(`http://localhost:5000/data/release/${selections.release}`);
-        setReleaseData(response.data);
-        setShowTable(true); // Show the table on successful data fetch
-      } catch (error) {
-        console.error("Error fetching release data:", error);
-        alert("Failed to fetch release data");
-      }
+      fetchReleaseData(selections.release);
+    }
+  }, [selections.release]);
+
+  const fetchReleaseData = async (release: string) => {
+    try {
+      // Assuming the URL correctly targets your backend structure
+      const response = await axios.get<IReleaseData>(`http://localhost:5000/releases/${release}`);
+      setReleaseData(response.data);
+      setShowTable(false); // Reset table visibility
+    } catch (error) {
+      console.error("Error fetching release data:", error);
+      alert("Failed to fetch release data");
     }
   };
 
-  // Ensure dependencies dropdown is filled correctly
-  useEffect(() => {
-    if (selections.application && selections.module) {
-      // Potentially fetch and set available releases dynamically
-      // For now, the release options are hard-coded
-    }
-  }, [selections.application, selections.module]);
+  const handleCompareClick = () => {
+    setShowTable(true);
+  };
 
   return (
     <div className="comparison-container">
       <div className="selections-area">
-        {/* Application Dropdown */}
+        {/* Omitted existing dropdowns for brevity */}
+        {/* Dependency Dropdown, now serves as Module Dropdown */}
         <div className="dropdown">
-          <label htmlFor="application">Application</label>
-          <select name="application" value={selections.application} onChange={(e) => setSelections({...selections, application: e.target.value})}>
-            <option value="WIBSV">WIBSV</option>
+          <label htmlFor="dependency">Module</label>
+          <select
+            name="dependency"
+            value={selections.dependency}
+            onChange={(e) => setSelections({ ...selections, dependency: e.target.value })}
+          >
+            <option value="">Select Module</option>
+            {releaseData?.data.map((module) => (
+              <option key={module.name} value={module.name}>{module.name}</option>
+            ))}
           </select>
         </div>
 
-        {/* Module Dropdown */}
-        <div className="dropdown">
-          <label htmlFor="module">Module</label>
-          <select name="module" value={selections.module} onChange={(e) => setSelections({...selections, module: e.target.value})}>
-            <option value="card-management">Card Management</option>
-          </select>
-        </div>
-
-        {/* Release Dropdown */}
-        <div className="dropdown">
-          <label htmlFor="release">Release</label>
-          <select name="release" value={selections.release} onChange={(e) => setSelections({...selections, release: e.target.value})}>
-            <option value="">Select Release</option>
-            <option value="R24.01.00">R24.01.00</option>
-            <option value="R23.12.00">R23.12.00</option>
-            <option value="R23.11.00">R23.11.00</option>
-          </select>
-        </div>
-
-        {/* Compare Button */}
-        <button className="compare-button" onClick={handleCompareClick} disabled={!selections.release}>
+        <button className="compare-button" onClick={handleCompareClick} disabled={!selections.dependency}>
           Compare
         </button>
       </div>
 
       {/* Results Table */}
-      {showTable && releaseData && (
+      {showTable && releaseData && selections.dependency && (
         <div className="results-area">
           <table className="results-table">
             <thead>
               <tr>
-                <th>Release</th>
-                <th>Module Name</th>
-                <th>Dependencies</th>
                 <th>Test Cases</th>
                 <th>Test Cases Not Run</th>
+                <th>Dependencies</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>{releaseData.release}</td>
-                <td>{releaseData.module_name.join(", ")}</td>
-                <td>{releaseData.dependency.join(", ")}</td>
-                <td>{releaseData.testcases.join(", ")}</td>
-                <td>{releaseData.testcases_not_run.join(", ")}</td>
-              </tr>
+              {releaseData.data.filter(module => module.name === selections.dependency).map((module) => (
+                <tr key={module.name}>
+                  <td>{module.testcases.join(", ")}</td>
+                  <td>{module.testcasesNotRunned.join(", ")}</td>
+                  <td>{module.dependency.join(", ")}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -152,3 +146,4 @@ const ComparisonTool: React.FC = () => {
 };
 
 export default ComparisonTool;
+
