@@ -64,40 +64,33 @@ interface IReleaseData {
 
 const ComparisonTool: React.FC = () => {
   const [selections, setSelections] = useState<ISelections>({
-    application: 'WIBSV', // Assuming a single application choice as per your setup
-    module: 'card-management', // Assuming static choice for now
+    application: 'WIBSV',
+    module: 'card-management',
     release: '',
     moduleName: '',
   });
 
-  const [releaseData, setReleaseData] = useState<IReleaseData[]>([]);
   const [modulesData, setModulesData] = useState<IModuleData[]>([]);
   const [selectedModuleData, setSelectedModuleData] = useState<IModuleData | null>(null);
 
+  // Fetch release-specific data when a new release is selected
   useEffect(() => {
-    // Here, you'd fetch all releases data or you can modify to fetch based on the release
-    // For simplicity, I'm assuming data is static or fetched from an endpoint directly
-    const fetchReleaseData = async () => {
-      try {
-        // Example: Fetching from a static endpoint, adjust accordingly
-        const response = await axios.get<IReleaseData[]>('http://your-api-endpoint/releases');
-        setReleaseData(response.data);
-      } catch (error) {
-        console.error("Error fetching release data:", error);
-        alert("Failed to fetch release data");
-      }
-    };
+    if (selections.release) {
+      const fetchReleaseData = async () => {
+        try {
+          // Dynamically construct the URL with the selected releaseId
+          const url = `http://your-api-endpoint/releases/${selections.release}`;
+          const response = await axios.get<IReleaseData>(url);
+          setModulesData(response.data.data); // Assuming the response structure matches IReleaseData
+        } catch (error) {
+          console.error("Error fetching release data:", error);
+          alert("Failed to fetch release data for the selected release");
+        }
+      };
 
-    fetchReleaseData();
-  }, []);
-
-  useEffect(() => {
-    // When release is selected, filter the modules for that release
-    const currentReleaseData = releaseData.find(r => r.release === selections.release);
-    if (currentReleaseData) {
-      setModulesData(currentReleaseData.data);
+      fetchReleaseData();
     }
-  }, [selections.release, releaseData]);
+  }, [selections.release]);
 
   const handleCompareClick = () => {
     const moduleData = modulesData.find(m => m.name === selections.moduleName) || null;
@@ -107,7 +100,7 @@ const ComparisonTool: React.FC = () => {
   return (
     <div className="comparison-container">
       <div className="selections-area">
-        {/* Assuming other dropdowns are static and not directly related to the comparison logic */}
+        {/* Other dropdowns are static, focusing on dynamic release and module dropdowns */}
         <div className="dropdown">
           <label htmlFor="release">Release</label>
           <select
@@ -116,9 +109,10 @@ const ComparisonTool: React.FC = () => {
             onChange={(e) => setSelections(prev => ({ ...prev, release: e.target.value, moduleName: '' }))}
           >
             <option value="">Select Release</option>
-            {releaseData.map((r) => (
-              <option key={r.release} value={r.release}>{r.release}</option>
-            ))}
+            {/* Populate with your releases. This part might be static or fetched separately. */}
+            <option value="R24.01.00">R24.01.00</option>
+            <option value="R23.12.00">R23.12.00</option>
+            <option value="R23.11.00">R23.11.00</option>
           </select>
         </div>
         
