@@ -248,28 +248,103 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ComparisonTool.scss'; // Ensure the correct path to your CSS file
 
-// Updated interfaces as shown above...
+// Define TypeScript interfaces for your data structures
+interface IFeatureTest {
+  feature: string;
+  tests: string[];
+}
+
+interface IModuleData {
+  name: string;
+  testcases: IFeatureTest[];
+  testcasesNotRunned: IFeatureTest[];
+  dependency: string[];
+}
+
+interface IReleaseData {
+  release: string;
+  data: IModuleData[];
+}
+
+interface ISelections {
+  application: string;
+  module: string;
+  release: string;
+  moduleName: string;
+}
 
 const ComparisonTool: React.FC = () => {
-  // Your existing useState and useEffect hooks...
+  const [selections, setSelections] = useState<ISelections>({
+    application: '',
+    module: '',
+    release: '',
+    moduleName: '',
+  });
 
-  // Function to calculate test case statistics
-  const calculateTestcaseStats = (module: IModuleData) => {
-    const totalTestcases = module.testcases.reduce((acc, curr) => acc + curr.tests.length, 0);
-    const totalTestcasesNotRunned = module.testcasesNotRunned.reduce((acc, curr) => acc + curr.tests.length, 0);
-    const testcasesExecuted = totalTestcases - totalTestcasesNotRunned;
+  const [releaseData, setReleaseData] = useState<IReleaseData[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    return { totalTestcases, testcasesExecuted, totalTestcasesNotRunned };
+  // Fetch release-specific data when a new release is selected
+  useEffect(() => {
+    if (selections.release) {
+      setIsLoading(true);
+      axios.get<IReleaseData[]>(`http://your-api-endpoint/releases/${selections.release}`)
+        .then(response => {
+          setReleaseData(response.data);
+        })
+        .catch(error => {
+          console.error("Error fetching release data:", error);
+          alert("Failed to fetch release data for the selected release");
+        })
+        .finally(() => setIsLoading(false));
+    }
+  }, [selections.release]);
+
+  const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setSelections(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
+    if (name === 'release') {
+      setReleaseData([]); // Clear previous release data when a new release is selected
+    }
+  };
+
+  const renderModuleData = (module: IModuleData) => {
+    // Calculate totals
+    const totalTestCases = module.testcases.reduce((acc, curr) => acc + curr.tests.length, 0);
+    const totalTestCasesNotRunned = module.testcasesNotRunned.reduce((acc, curr) => acc + curr.tests.length, 0);
+    const testCasesExecuted = totalTestCases - totalTestCasesNotRunned;
+
+    return (
+      <>
+        <tr>
+          <td>{module.testcases.map(tc => `${tc.feature}: ${tc.tests.join(', ')}`).join('; ')}</td>
+          <td>{module.testcasesNotRunned.map(tc => `${tc.feature}: ${tc.tests.join(', ')}`).join('; ')}</td>
+          <td>{module.dependency.join(", ")}</td>
+        </tr>
+        <tr>
+          <td>Total number of test cases: {totalTestCases}</td>
+          <td>Number of test cases executed: {testCasesExecuted}</td>
+          <td>Number of test cases missed: {totalTestCasesNotRunned}</td>
+        </tr>
+      </>
+    );
   };
 
   return (
-    // Your existing rendering logic for dropdowns...
+    <div className="comparison-container">
+      {/* Selection dropdowns */}
+      <div className="selections-area">
+        {/* Dropdowns for Application, Module, Release, and Module Name */}
+        {/* Implementation is similar to before, focused on TypeScript integration */}
+      </div>
 
-    {isLoading ? (
-      <p>Loading...</p>
-    ) : (
-      <div className="results-area">
-        {selections.moduleName && releaseData && (
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="results-area">
           <table className="results-table">
             <thead>
               <tr>
@@ -279,43 +354,13 @@ const ComparisonTool: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {releaseData.data
-                .filter(module => module.name === selections.moduleName)
-                .map((module, index) => {
-                  const { totalTestcases, testcasesExecuted, totalTestcasesNotRunned } = calculateTestcaseStats(module);
-                  return (
-                    <>
-                      <tr key={index}>
-                        <td>
-                          {module.testcases.map((tc, idx) => (
-                            <div key={idx}>
-                              {`${tc.featurename || tc.feature}: ${tc.tests.join(', ')}`}
-                            </div>
-                          ))}
-                        </td>
-                        <td>{module.testcasesNotRunned.map((tc, idx) => (
-                          <div key={idx}>
-                            {`${tc.featurename || tc.feature}: ${tc.tests.join(', ')}`}
-                          </div>
-                        ))}</td>
-                        <td>{module.dependency.join(", ")}</td>
-                      </tr>
-                      {/* Additional rows for totals */}
-                      <tr>
-                        <td><strong>Total number of test cases:</strong> {totalTestcases}</td>
-                        <td><strong>Number of test cases executed:</strong> {testcasesExecuted}</td>
-                        <td><strong>Number of test cases missed:</strong> {totalTestcasesNotRunned}</td>
-                      </tr>
-                    </>
-                  );
-                })}
+              {releaseData.filter(r => r.release === selections.release).flatMap(r => r.data.map(renderModuleData))}
             </tbody>
           </table>
-        )}
-      </div>
-    )}
+        </div>
+      )}
+    </div>
   );
 };
 
 export default ComparisonTool;
-
