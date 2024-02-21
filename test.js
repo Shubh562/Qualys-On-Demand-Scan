@@ -341,26 +341,50 @@ const ComparisonTool: React.FC = () => {
         {/* Implementation is similar to before, focused on TypeScript integration */}
       </div>
 
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="results-area">
-          <table className="results-table">
-            <thead>
-              <tr>
-                <th>Test Cases</th>
-                <th>Test Cases Not Runned</th>
-                <th>Dependencies</th>
-              </tr>
-            </thead>
-            <tbody>
-              {releaseData.filter(r => r.release === selections.release).flatMap(r => r.data.map(renderModuleData))}
-            </tbody>
-          </table>
-        </div>
-      )}
+     <div className="dropdown">
+        <label htmlFor="moduleName">Module Name</label>
+        <select
+          name="moduleName"
+          value={selections.moduleName}
+          onChange={handleSelectionChange}
+          disabled={!releaseData || releaseData.length === 0}
+        >
+          <option value="">Select Module Name</option>
+          {releaseData && releaseData.filter(r => r.release === selections.release).flatMap(r => r.data).map(module => (
+            <option key={module.name} value={module.name}>{module.name}</option>
+          ))}
+        </select>
+      </div>
     </div>
-  );
-};
+
+    {isLoading ? (
+      <p>Loading...</p>
+    ) : (
+      <div className="results-area">
+        <table className="results-table">
+          <thead>
+            <tr>
+              <th>Test Cases</th>
+              <th>Test Cases Not Runned</th>
+              <th>Dependencies</th>
+            </tr>
+          </thead>
+          <tbody>
+            {releaseData && releaseData.filter(r => r.release === selections.release).flatMap(r => r.data.map(module => (
+              <React.Fragment key={module.name}>
+                <tr>
+                  <td>{module.testcases.map(tc => `${tc.feature}: ${tc.tests.join(', ')}`).join('; ')}</td>
+                  <td>{module.testcasesNotRunned.map(tc => `${tc.feature}: ${tc.tests.join(', ')}`).join('; ')}</td>
+                  <td>{module.dependency.join(", ")}</td>
+                </tr>
+                {/* Additional logic for calculating and displaying total test cases, executed, and missed */}
+              </React.Fragment>
+            )))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+);
 
 export default ComparisonTool;
