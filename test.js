@@ -236,3 +236,86 @@ export default ComparisonTool;
   }
 }
 
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './ComparisonTool.scss'; // Ensure the correct path to your CSS file
+
+// Updated interfaces as shown above...
+
+const ComparisonTool: React.FC = () => {
+  // Your existing useState and useEffect hooks...
+
+  // Function to calculate test case statistics
+  const calculateTestcaseStats = (module: IModuleData) => {
+    const totalTestcases = module.testcases.reduce((acc, curr) => acc + curr.tests.length, 0);
+    const totalTestcasesNotRunned = module.testcasesNotRunned.reduce((acc, curr) => acc + curr.tests.length, 0);
+    const testcasesExecuted = totalTestcases - totalTestcasesNotRunned;
+
+    return { totalTestcases, testcasesExecuted, totalTestcasesNotRunned };
+  };
+
+  return (
+    // Your existing rendering logic for dropdowns...
+
+    {isLoading ? (
+      <p>Loading...</p>
+    ) : (
+      <div className="results-area">
+        {selections.moduleName && releaseData && (
+          <table className="results-table">
+            <thead>
+              <tr>
+                <th>Test Cases</th>
+                <th>Test Cases Not Runned</th>
+                <th>Dependencies</th>
+              </tr>
+            </thead>
+            <tbody>
+              {releaseData.data
+                .filter(module => module.name === selections.moduleName)
+                .map((module, index) => {
+                  const { totalTestcases, testcasesExecuted, totalTestcasesNotRunned } = calculateTestcaseStats(module);
+                  return (
+                    <>
+                      <tr key={index}>
+                        <td>
+                          {module.testcases.map((tc, idx) => (
+                            <div key={idx}>
+                              {`${tc.featurename || tc.feature}: ${tc.tests.join(', ')}`}
+                            </div>
+                          ))}
+                        </td>
+                        <td>{module.testcasesNotRunned.map((tc, idx) => (
+                          <div key={idx}>
+                            {`${tc.featurename || tc.feature}: ${tc.tests.join(', ')}`}
+                          </div>
+                        ))}</td>
+                        <td>{module.dependency.join(", ")}</td>
+                      </tr>
+                      {/* Additional rows for totals */}
+                      <tr>
+                        <td><strong>Total number of test cases:</strong> {totalTestcases}</td>
+                        <td><strong>Number of test cases executed:</strong> {testcasesExecuted}</td>
+                        <td><strong>Number of test cases missed:</strong> {totalTestcasesNotRunned}</td>
+                      </tr>
+                    </>
+                  );
+                })}
+            </tbody>
+          </table>
+        )}
+      </div>
+    )}
+  );
+};
+
+export default ComparisonTool;
+
