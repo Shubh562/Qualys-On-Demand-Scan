@@ -42,3 +42,34 @@ const ComparisonTool: React.FC = () => {
     </div>
   );
 };
+
+
+
+
+/* ComparisonTool.scss */
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.results-table th,
+.results-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.results-table th {
+  background-color: #f2f2f2; /* Grey background for headers */
+  color: blue; /* Blue text color for headers */
+}
+
+.results-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9; /* White background for even rows */
+}
+
+.results-table tbody tr:nth-child(odd) {
+  background-color: #ffffff; /* Grey background for odd rows */
+}
+
