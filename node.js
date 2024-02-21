@@ -2,7 +2,12 @@ const ComparisonTool: React.FC = () => {
   // State and useEffect remain unchanged...
 
   // Adjusted rendering logic for testcases and testcasesNotRunned
-  const renderTestCases = (testCases: IFeatureTest[]) => {
+
+ const renderTestCases = (testCases?: IFeatureTest[]) => {
+    if (!testCases) {
+      return null;
+    }
+
     return testCases.map((testCase, index) => (
       <div key={index}>
         <strong>{testCase.featurename}:</strong> {testCase.tests.join(', ')}
