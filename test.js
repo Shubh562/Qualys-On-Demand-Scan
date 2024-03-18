@@ -42,6 +42,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -62,32 +63,47 @@ public class ReliefCenterUtilTest {
     }
 
     @Test
-    public void testHoganProductTypeGetter() {
+    public void testHoganProductTypeGetter_WhenAccountKeyGrpHoganIsNull() {
         Account account = Mockito.mock(Account.class);
-        AccountProfile accountProfile = Mockito.mock(AccountProfile.class);
-        AccountKeyGrpHogan accountKeyGrpHogan = Mockito.mock(AccountKeyGrpHogan.class);
-        HoganProductType hoganProductType = Mockito.mock(HoganProductType.class);
-        Mockito.when(account.getAccountProfile()).thenReturn(accountProfile);
-        Mockito.when(accountProfile.getAccountKey()).thenReturn(accountKeyGrpHogan);
-        Mockito.when(accountKeyGrpHogan.getHoganProductType()).thenReturn(hoganProductType);
+        Mockito.when(account.getAccountProfile()).thenReturn(null);
 
         Optional<HoganProductType> result = ReliefCenterUtil.hoganProductTypeGetter.apply(account);
-        assertTrue(result.isPresent());
+        assertTrue(result.isEmpty());
     }
 
     @Test
-    public void testHoganProductCodeGetter() {
+    public void testHoganProductTypeGetter_WhenAccountKeyGrpHoganIsNotNull() {
         Account account = Mockito.mock(Account.class);
         AccountProfile accountProfile = Mockito.mock(AccountProfile.class);
         AccountKeyGrpHogan accountKeyGrpHogan = Mockito.mock(AccountKeyGrpHogan.class);
-        HoganProductType hoganProductType = Mockito.mock(HoganProductType.class);
+        HoganProductType hoganProductType = new HoganProductType("TestProduct");
         Mockito.when(account.getAccountProfile()).thenReturn(accountProfile);
         Mockito.when(accountProfile.getAccountKey()).thenReturn(accountKeyGrpHogan);
-        Mockito.when(accountKeyGrpHogan.getHoganProductType()).thenReturn(hoganProductType);
-        Mockito.when(hoganProductType.getCode()).thenReturn("productCode");
+        Mockito.when(accountKeyGrpHogan.getAccountKeyGrpHogan()).thenReturn(hoganProductType);
+
+        Optional<HoganProductType> result = ReliefCenterUtil.hoganProductTypeGetter.apply(account);
+        assertTrue(result.isPresent());
+        assertEquals("TestProduct", result.get().getCode());
+    }
+
+    @Test
+    public void testHoganProductCodeGetter_WhenHoganProductTypeIsNull() {
+        Account account = Mockito.mock(Account.class);
+        Mockito.when(account.getAccountProfile()).thenReturn(null);
 
         Optional<String> result = ReliefCenterUtil.hoganProductCodeGetter.apply(account);
-        assertEquals("productCode", result.orElse(null));
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testHoganProductCodeGetter_WhenHoganProductTypeIsNotNull() {
+        Account account = Mockito.mock(Account.class);
+        HoganProductType hoganProductType = new HoganProductType("TestProduct");
+        Mockito.when(ReliefCenterUtil.hoganProductTypeGetter.apply(account)).thenReturn(Optional.of(hoganProductType));
+
+        Optional<String> result = ReliefCenterUtil.hoganProductCodeGetter.apply(account);
+        assertTrue(result.isPresent());
+        assertEquals("TestProduct", result.get());
     }
 
     @Test
@@ -95,55 +111,61 @@ public class ReliefCenterUtilTest {
         DomainServices domainServices = Mockito.mock(DomainServices.class);
         OnLineBankingSession onLineBankingSession = Mockito.mock(OnLineBankingSession.class);
         CustomerManager customerManager = Mockito.mock(CustomerManager.class);
-        AccountManager accountManager = Mockito.mock(AccountManager.class);
+        AccountManager accountManager = new AccountManager();
         Mockito.when(domainServices.getOnLineBankingSession()).thenReturn(onLineBankingSession);
         Mockito.when(onLineBankingSession.getCustomerManager()).thenReturn(customerManager);
         Mockito.when(customerManager.getAccountManager()).thenReturn(accountManager);
 
         Optional<AccountManager> result = ReliefCenterUtil.accountManagerGetter.apply(domainServices);
         assertTrue(result.isPresent());
+        assertEquals(accountManager, result.get());
     }
 
     @Test
     public void testBalanceAmountGetter() {
         Balance balance = Mockito.mock(Balance.class);
         Amount amount = Mockito.mock(Amount.class);
+        BigDecimal expectedAmount = new BigDecimal("100.50");
         Mockito.when(balance.getAmount()).thenReturn(amount);
-        Mockito.when(amount.getAmount()).thenReturn(BigDecimal.TEN);
+        Mockito.when(amount.getAmount()).thenReturn(expectedAmount);
 
         Optional<BigDecimal> result = ReliefCenterUtil.balanceAmountGetter.apply(balance);
-        assertEquals(BigDecimal.TEN, result.orElse(null));
+        assertTrue(result.isPresent());
+        assertEquals(expectedAmount, result.get());
     }
 
     @Test
     public void testCommonStartupContextGetter() {
         DomainServices domainServices = Mockito.mock(DomainServices.class);
-        OnLineBankingServicingWebSession webSession = Mockito.mock(OnLineBankingServicingWebSession.class);
-        CommonStartupContext commonStartupContext = Mockito.mock(CommonStartupContext.class);
-        Mockito.when(domainServices.getOnlineBankingServicingWebSession()).thenReturn(webSession);
-        Mockito.when(webSession.getCommonStartupContext()).thenReturn(commonStartupContext);
+        OnLineBankingServicingWebSession onLineBankingServicingWebSession = Mockito.mock(OnLineBankingServicingWebSession.class);
+        CommonStartupContext commonStartupContext = new CommonStartupContext();
+        Mockito.when(domainServices.getOnlineBankingServicingWebSession()).thenReturn(onLineBankingServicingWebSession);
+        Mockito.when(onLineBankingServicingWebSession.getCommonStartupContext()).thenReturn(commonStartupContext);
 
         Optional<CommonStartupContext> result = ReliefCenterUtil.commonStartupContextGetter.apply(domainServices);
         assertTrue(result.isPresent());
+        assertEquals(commonStartupContext, result.get());
     }
 
     @Test
     public void testRetrieveQuestionSystemsErrorsGetter() {
-        RetrieveQuestionsResponseTO responseTO = Mockito.mock(RetrieveQuestionsResponseTO.class);
-        RetrieveQuestionsResponse response = Mockito.mock(RetrieveQuestionsResponse.class);
-        SystemError systemError = Mockito.mock(SystemError.class);
-        Mockito.when(responseTO.getResponse()).thenReturn(response);
-        Mockito.when(response.getSystemErrors()).thenReturn(Collections.singletonList(systemError));
+        RetrieveQuestionsResponseTO retrieveQuestionsResponseTO = Mockito.mock(RetrieveQuestionsResponseTO.class);
+        RetrieveQuestionsResponse retrieveQuestionsResponse = Mockito.mock(RetrieveQuestionsResponse.class);
+        SystemError systemError = new SystemError();
+        Mockito.when(retrieveQuestionsResponseTO.getResponse()).thenReturn(retrieveQuestionsResponse);
+        Mockito.when(retrieveQuestionsResponse.getSystemErrors()).thenReturn(Collections.singletonList(systemError));
 
-        Optional<List<SystemError>> result = ReliefCenterUtil.retrieveQuestionSystemsErrorsGetter.apply(responseTO);
+        Optional<List<SystemError>> result = ReliefCenterUtil.retrieveQuestionSystemsErrorsGetter.apply(retrieveQuestionsResponseTO);
         assertTrue(result.isPresent());
         assertEquals(1, result.get().size());
+        assertEquals(systemError, result.get().get(0));
     }
 
     @Test
     public void testBuildCasmDelegateHeaderMap() {
         String unitOfWorkID = "unitOfWorkID";
         Map<String, String> headerMap = ReliefCenterUtil.buildCasmDelegateHeaderMap(unitOfWorkID);
+
         assertEquals(5, headerMap.size());
         assertTrue(headerMap.containsKey("WF_SENDERMESSAGEID_HEADER"));
         assertTrue(headerMap.containsKey("WF_CREATIONTIMESTAMP_HEADER"));
