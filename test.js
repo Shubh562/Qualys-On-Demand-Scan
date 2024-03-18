@@ -37,170 +37,110 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
-
-import org.junit.Test;
-import org.mockito.Mockito;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 public class ReliefCenterUtilTest {
 
-    @Test
-    public void testAccountKeyGrpHoganGetter() {
-        // Mocking necessary objects
-        Account account = Mockito.mock(Account.class);
-        AccountProfile accountProfile = Mockito.mock(AccountProfile.class);
-        AccountKey accountKey = Mockito.mock(AccountKey.class);
-        AccountKeyGrpHogan accountKeyGrpHogan = Mockito.mock(AccountKeyGrpHogan.class);
-        
-        // Setting up mock behavior
-        Mockito.when(account.getAccountProfile()).thenReturn(accountProfile);
-        Mockito.when(accountProfile.getAccountKey()).thenReturn(accountKey);
-        Mockito.when(accountKey.getAccountKeyGrpHogan()).thenReturn(accountKeyGrpHogan);
+  @Test
+  public void testAccountKeyGrpHoganGetter() {
+    // Mock Account with AccountProfile and AccountKey
+    Account mockAccount = mock(Account.class);
+    AccountProfile mockProfile = mock(AccountProfile.class);
+    AccountKey mockKey = mock(AccountKey.class);
+    HoganProductType mockProductType = mock(HoganProductType.class);
+    String mockCode = "MOCK_CODE";
 
-        // Calling the method under test
-        Optional<AccountKeyGrpHogan> result = ReliefCenterUtil.accountKeyGrpHoganGetter.apply(account);
-        
-        // Asserting the result
-        assertTrue(result.isPresent());
-    }
+    // Test with valid Account
+    when(mockAccount.getAccountProfile()).thenReturn(mockProfile);
+    when(mockProfile.getAccountKey()).thenReturn(mockKey);
+    when(mockKey.getAccountKeyGrpHogan()).thenReturn(mockProductType);
+    when(mockProductType.getCode()).thenReturn(mockCode);
 
-    @Test
-    public void testHoganProductTypeGetter() {
-        // Mocking necessary objects
-        Account account = Mockito.mock(Account.class);
-        AccountProfile accountProfile = Mockito.mock(AccountProfile.class);
-        AccountKey accountKey = Mockito.mock(AccountKey.class);
-        AccountKeyGrpHogan accountKeyGrpHogan = Mockito.mock(AccountKeyGrpHogan.class);
-        HoganProductType hoganProductType = new HoganProductType("TestProduct");
-        
-        // Setting up mock behavior
-        Mockito.when(account.getAccountProfile()).thenReturn(accountProfile);
-        Mockito.when(accountProfile.getAccountKey()).thenReturn(accountKey);
-        Mockito.when(accountKey.getAccountKeyGrpHogan()).thenReturn(accountKeyGrpHogan);
-        Mockito.when(accountKeyGrpHogan.getAccountKeyGrpHogan()).thenReturn(hoganProductType);
+    Optional<AccountKeyGrpHogan> result = ReliefCenterUtil.accountKeyGrpHoganGetter.apply(mockAccount);
 
-        // Calling the method under test
-        Optional<HoganProductType> result = ReliefCenterUtil.hoganProductTypeGetter.apply(account);
-        
-        // Asserting the result
-        assertTrue(result.isPresent());
-        assertEquals("TestProduct", result.get().getCode());
-    }
+    assertTrue(result.isPresent());
+    assertEquals(mockCode, result.get().getCode());
 
-    @Test
-    public void testHoganProductCodeGetter() {
-        // Mocking necessary objects
-        Account account = Mockito.mock(Account.class);
-        HoganProductType hoganProductType = new HoganProductType("TestProduct");
-        
-        // Setting up mock behavior
-        Mockito.when(ReliefCenterUtil.hoganProductTypeGetter.apply(account)).thenReturn(Optional.of(hoganProductType));
+    // Test with null Account
+    reset(mockAccount); // Reset mocks for next test
+    result = ReliefCenterUtil.accountKeyGrpHoganGetter.apply(null);
+    assertFalse(result.isPresent());
+  }
 
-        // Calling the method under test
-        Optional<String> result = ReliefCenterUtil.hoganProductCodeGetter.apply(account);
-        
-        // Asserting the result
-        assertTrue(result.isPresent());
-        assertEquals("TestProduct", result.get());
-    }
+  @Test
+  public void testHoganProductTypeGetter() {
+    // Mock Account with AccountProfile and AccountKey
+    Account mockAccount = mock(Account.class);
+    AccountProfile mockProfile = mock(AccountProfile.class);
+    AccountKey mockKey = mock(AccountKey.class);
+    HoganProductType mockProductType = mock(HoganProductType.class);
 
-    @Test
-    public void testAccountManagerGetter() {
-        // Mocking necessary objects
-        DomainServices domainServices = Mockito.mock(DomainServices.class);
-        OnLineBankingSession onLineBankingSession = Mockito.mock(OnLineBankingSession.class);
-        CustomerManager customerManager = Mockito.mock(CustomerManager.class);
-        AccountManager accountManager = new AccountManager();
-        
-        // Setting up mock behavior
-        Mockito.when(domainServices.getOnLineBankingSession()).thenReturn(onLineBankingSession);
-        Mockito.when(onLineBankingSession.getCustomerManager()).thenReturn(customerManager);
-        Mockito.when(customerManager.getAccountManager()).thenReturn(accountManager);
+    // Test with valid Account
+    when(mockAccount.getAccountProfile()).thenReturn(mockProfile);
+    when(mockProfile.getAccountKey()).thenReturn(mockKey);
+    when(mockKey.getAccountKeyGrpHogan()).thenReturn(mockProductType);
 
-        // Calling the method under test
-        Optional<AccountManager> result = ReliefCenterUtil.accountManagerGetter.apply(domainServices);
-        
-        // Asserting the result
-        assertTrue(result.isPresent());
-        assertEquals(accountManager, result.get());
-    }
+    Optional<HoganProductType> result = ReliefCenterUtil.hoganProductTypeGetter.apply(mockAccount);
 
-    @Test
-    public void testBalanceAmountGetter() {
-        // Mocking necessary objects
-        Balance balance = Mockito.mock(Balance.class);
-        Amount amount = Mockito.mock(Amount.class);
-        BigDecimal expectedAmount = new BigDecimal("100.50");
-        
-        // Setting up mock behavior
-        Mockito.when(balance.getAmount()).thenReturn(amount);
-        Mockito.when(amount.getAmount()).thenReturn(expectedAmount);
+    assertTrue(result.isPresent());
+    assertEquals(mockProductType, result.get());
 
-        // Calling the method under test
-        Optional<BigDecimal> result = ReliefCenterUtil.balanceAmountGetter.apply(balance);
-        
-        // Asserting the result
-        assertTrue(result.isPresent());
-        assertEquals(expectedAmount, result.get());
-    }
+    // Test with empty Optional
+    Optional<Account> emptyOptional = Optional.empty();
+    result = ReliefCenterUtil.hoganProductTypeGetter.apply(emptyOptional);
 
-    @Test
-    public void testCommonStartupContextGetter() {
-        // Mocking necessary objects
-        DomainServices domainServices = Mockito.mock(DomainServices.class);
-        OnLineBankingServicingWebSession onLineBankingServicingWebSession = Mockito.mock(OnLineBankingServicingWebSession.class);
-        CommonStartupContext commonStartupContext = new CommonStartupContext();
-        
-        // Setting up mock behavior
-        Mockito.when(domainServices.getOnlineBankingServicingWebSession()).thenReturn(onLineBankingServicingWebSession);
-        Mockito.when(onLineBankingServicingWebSession.getCommonStartupContext()).thenReturn(commonStartupContext);
+    assertFalse(result.isPresent());
+  }
 
-        // Calling the method under test
-        Optional<CommonStartupContext> result = ReliefCenterUtil.commonStartupContextGetter.apply(domainServices);
-        
-        // Asserting the result
-        assertTrue(result.isPresent());
-        assertEquals(commonStartupContext, result.get());
-    }
+  @Test
+  public void testHoganProductCodeGetter() {
+    // Mock Account with AccountProfile and AccountKey
+    Account mockAccount = mock(Account.class);
+    AccountProfile mockProfile = mock(AccountProfile.class);
+    AccountKey mockKey = mock(AccountKey.class);
+    HoganProductType mockProductType = mock(HoganProductType.class);
+    String mockCode = "MOCK_CODE";
 
-    @Test
-    public void testRetrieveQuestionSystemsErrorsGetter() {
-        // Mocking necessary objects
-        RetrieveQuestionsResponseTO retrieveQuestionsResponseTO = Mockito.mock(RetrieveQuestionsResponseTO.class);
-        RetrieveQuestionsResponse retrieveQuestionsResponse = Mockito.mock(RetrieveQuestionsResponse.class);
-        SystemError systemError = new SystemError();
-        
-        // Setting up mock behavior
-        Mockito.when(retrieveQuestionsResponseTO.getResponse()).thenReturn(retrieveQuestionsResponse);
-        Mockito.when(retrieveQuestionsResponse.getSystemErrors()).thenReturn(Collections.singletonList(systemError));
+    when(mockAccount.getAccountProfile()).thenReturn(mockProfile);
+    when(mockProfile.getAccountKey()).thenReturn(mockKey);
+    when(mockKey.getAccountKeyGrpHogan()).thenReturn(mockProductType);
+    when(mockProductType.getCode()).thenReturn(mockCode);
 
-        // Calling the method under test
-        Optional<List<SystemError>> result = ReliefCenterUtil.retrieveQuestionSystemsErrorsGetter.apply(retrieveQuestionsResponseTO);
-        
-        // Asserting the result
-        assertTrue(result.isPresent());
-        assertEquals(1, result.get().size());
-        assertEquals(systemError, result.get().get(0));
-    }
+    Optional<String> result = ReliefCenterUtil.hoganProductCodeGetter.apply(mockAccount);
 
-    @Test
-    public void testBuildCasmDelegateHeaderMap() {
-        // Calling the method under test
-        String unitOfWorkID = "unitOfWorkID";
-        Map<String, String> headerMap = ReliefCenterUtil.buildCasmDelegateHeaderMap(unitOfWorkID);
+    assertTrue(result.isPresent());
+    assertEquals(mockCode, result.get());
 
-        // Asserting the result
-        assertEquals(5, headerMap.size());
-        assertTrue(headerMap.containsKey("WF_SENDERMESSAGEID_HEADER"));
-        assertTrue(headerMap.containsKey("WF_CREATIONTIMESTAMP_HEADER"));
-        assertTrue(headerMap.containsKey("WF_SENDERAPPLICATIONID_HEADER"));
-        assertTrue(headerMap.containsKey("WF_SENDERHOSTNAME_HEADER_HEADER"));
-        assertTrue(headerMap.containsKey("WF_SESSIONID_HEADER"));
-    }
-}
+    // Test with empty Optional
+    Optional<HoganProductType> emptyOptional = Optional.empty();
+    result = ReliefCenterUtil.hoganProductCodeGetter.apply(emptyOptional);
+
+    assertFalse(result.isPresent());
+  }
+
+  @Test
+  public void testAccountManagerGetter() {
+    // Mock DomainServices, OnLineBankingSession, CustomerManager, and AccountManager
+    DomainServices mockServices = mock(DomainServices.class);
+    OnLineBankingSession mockSession = mock(OnLineBankingSession.class);
+    CustomerManager mockCustomerManager = mock(CustomerManager.class);
+    AccountManager mockAccountManager = mock(AccountManager.class);
+
+    // Test with valid DomainServices
+    when(mockServices.getOnLineBankingSession()).thenReturn(mockSession);
+    when(mockSession.getCustomerManager()).thenReturn(mockCustomerManager);
+    when(mockCustomerManager.getAccountManager()).thenReturn(mockAccountManager);
+
+    Optional<Account
