@@ -37,110 +37,169 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.text.SimpleDateFormat;
-import java.util.UUID;
-
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import static org.junit.Assert.assertEquals;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({UUID.class, SimpleDateFormat.class})
 public class ReliefCenterUtilTest {
 
-  @Test
-  public void testAccountKeyGrpHoganGetter() {
-    // Mock Account with AccountProfile and AccountKey
-    Account mockAccount = mock(Account.class);
-    AccountProfile mockProfile = mock(AccountProfile.class);
-    AccountKey mockKey = mock(AccountKey.class);
-    HoganProductType mockProductType = mock(HoganProductType.class);
-    String mockCode = "MOCK_CODE";
+    @Mock
+    private Account mockAccount;
 
-    // Test with valid Account
-    when(mockAccount.getAccountProfile()).thenReturn(mockProfile);
-    when(mockProfile.getAccountKey()).thenReturn(mockKey);
-    when(mockKey.getAccountKeyGrpHogan()).thenReturn(mockProductType);
-    when(mockProductType.getCode()).thenReturn(mockCode);
+    @Mock
+    private AccountProfile mockAccountProfile;
 
-    Optional<AccountKeyGrpHogan> result = ReliefCenterUtil.accountKeyGrpHoganGetter.apply(mockAccount);
+    @Mock
+    private AccountKey mockAccountKey;
 
-    assertTrue(result.isPresent());
-    assertEquals(mockCode, result.get().getCode());
+    @Mock
+    private AccountKeyGrpHogan mockAccountKeyGrpHogan;
 
-    // Test with null Account
-    reset(mockAccount); // Reset mocks for next test
-    result = ReliefCenterUtil.accountKeyGrpHoganGetter.apply(null);
-    assertFalse(result.isPresent());
-  }
+    @Mock
+    private HoganProductType mockHoganProductType;
 
-  @Test
-  public void testHoganProductTypeGetter() {
-    // Mock Account with AccountProfile and AccountKey
-    Account mockAccount = mock(Account.class);
-    AccountProfile mockProfile = mock(AccountProfile.class);
-    AccountKey mockKey = mock(AccountKey.class);
-    HoganProductType mockProductType = mock(HoganProductType.class);
+    @Mock
+    private Balance mockBalance;
 
-    // Test with valid Account
-    when(mockAccount.getAccountProfile()).thenReturn(mockProfile);
-    when(mockProfile.getAccountKey()).thenReturn(mockKey);
-    when(mockKey.getAccountKeyGrpHogan()).thenReturn(mockProductType);
+    @Mock
+    private DomainServices mockDomainServices;
 
-    Optional<HoganProductType> result = ReliefCenterUtil.hoganProductTypeGetter.apply(mockAccount);
+    @Mock
+    private OnLineBankingSession mockOnLineBankingSession;
 
-    assertTrue(result.isPresent());
-    assertEquals(mockProductType, result.get());
+    @Mock
+    private CustomerManager mockCustomerManager;
 
-    // Test with empty Optional
-    Optional<Account> emptyOptional = Optional.empty();
-    result = ReliefCenterUtil.hoganProductTypeGetter.apply(emptyOptional);
+    @Mock
+    private CommonStartupContext mockCommonStartupContext;
 
-    assertFalse(result.isPresent());
-  }
+    @Mock
+    private OnLineBankingServicingWebSession mockOnLineBankingServicingWebSession;
 
-  @Test
-  public void testHoganProductCodeGetter() {
-    // Mock Account with AccountProfile and AccountKey
-    Account mockAccount = mock(Account.class);
-    AccountProfile mockProfile = mock(AccountProfile.class);
-    AccountKey mockKey = mock(AccountKey.class);
-    HoganProductType mockProductType = mock(HoganProductType.class);
-    String mockCode = "MOCK_CODE";
+    @Mock
+    private RetrieveQuestionsResponseTO mockRetrieveQuestionsResponseTO;
 
-    when(mockAccount.getAccountProfile()).thenReturn(mockProfile);
-    when(mockProfile.getAccountKey()).thenReturn(mockKey);
-    when(mockKey.getAccountKeyGrpHogan()).thenReturn(mockProductType);
-    when(mockProductType.getCode()).thenReturn(mockCode);
+    @Mock
+    private RetrieveQuestionsResponse mockRetrieveQuestionsResponse;
 
-    Optional<String> result = ReliefCenterUtil.hoganProductCodeGetter.apply(mockAccount);
+    @Test
+    public void testAccountKeyGrpHoganGetter() {
+        when(mockAccount.getAccountProfile()).thenReturn(mockAccountProfile);
+        when(mockAccountProfile.getAccountKey()).thenReturn(mockAccountKey);
+        when(mockAccountKey.getAccountKeyGrpHogan()).thenReturn(mockAccountKeyGrpHogan);
 
-    assertTrue(result.isPresent());
-    assertEquals(mockCode, result.get());
+        Optional<AccountKeyGrpHogan> expected = Optional.of(mockAccountKeyGrpHogan);
+        Optional<AccountKeyGrpHogan> actual = ReliefCenterUtil.accountKeyGrpHoganGetter.apply(mockAccount);
 
-    // Test with empty Optional
-    Optional<HoganProductType> emptyOptional = Optional.empty();
-    result = ReliefCenterUtil.hoganProductCodeGetter.apply(emptyOptional);
+        assertEquals(expected, actual);
+    }
 
-    assertFalse(result.isPresent());
-  }
+    @Test
+    public void testHoganProductTypeGetter() {
+        when(mockAccountKeyGrpHogan.getHoganProductType()).thenReturn(mockHoganProductType);
 
-  @Test
-  public void testAccountManagerGetter() {
-    // Mock DomainServices, OnLineBankingSession, CustomerManager, and AccountManager
-    DomainServices mockServices = mock(DomainServices.class);
-    OnLineBankingSession mockSession = mock(OnLineBankingSession.class);
-    CustomerManager mockCustomerManager = mock(CustomerManager.class);
-    AccountManager mockAccountManager = mock(AccountManager.class);
+        Optional<HoganProductType> expected = Optional.of(mockHoganProductType);
+        Optional<HoganProductType> actual = ReliefCenterUtil.hoganProductTypeGetter.apply(mockAccount);
 
-    // Test with valid DomainServices
-    when(mockServices.getOnLineBankingSession()).thenReturn(mockSession);
-    when(mockSession.getCustomerManager()).thenReturn(mockCustomerManager);
-    when(mockCustomerManager.getAccountManager()).thenReturn(mockAccountManager);
+        assertEquals(expected, actual);
+    }
 
-    Optional<Account
+    @Test
+    public void testHoganProductCodeGetter() {
+        when(mockHoganProductType.getCode()).thenReturn("mockCode");
+
+        Optional<String> expected = Optional.of("mockCode");
+        Optional<String> actual = ReliefCenterUtil.hoganProductCodeGetter.apply(mockAccount);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testAccountManagerGetter() {
+        when(mockDomainServices.getOnLineBankingSession()).thenReturn(mockOnLineBankingSession);
+        when(mockOnLineBankingSession.getCustomerManager()).thenReturn(mockCustomerManager);
+
+        Optional<CustomerManager> expected = Optional.of(mockCustomerManager);
+        Optional<CustomerManager> actual = ReliefCenterUtil.accountManagerGetter.apply(mockDomainServices);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBalanceAmountGetter() {
+        BigDecimal expectedAmount = new BigDecimal("100.00");
+        when(mockBalance.getAmount()).thenReturn(expectedAmount);
+
+        Optional<BigDecimal> expected = Optional.of(expectedAmount);
+        Optional<BigDecimal> actual = ReliefCenterUtil.balanceAmountGetter.apply(mockBalance);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testCommonStartupContextGetter() {
+        when(mockDomainServices.getOnlineBankingServicingWebSession()).thenReturn(mockOnLineBankingServicingWebSession);
+        when(mockOnLineBankingServicingWebSession.getCommonStartupContext()).thenReturn(mockCommonStartupContext);
+
+        Optional<CommonStartupContext> expected = Optional.of(mockCommonStartupContext);
+        Optional<CommonStartupContext> actual = ReliefCenterUtil.commonStartupContextGetter.apply(mockDomainServices);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testRetrieveQuestionSystemsErrorsGetter() {
+        when(mockRetrieveQuestionsResponseTO.getResponse()).thenReturn(mockRetrieveQuestionsResponse);
+
+        List<SystemError> expectedErrors = new ArrayList<>();
+        expectedErrors.add(new SystemError());
+        when(mockRetrieveQuestionsResponse.getSystemErrors()).thenReturn(expectedErrors);
+
+        Optional<List<SystemError>> expected = Optional.of(expectedErrors);
+        Optional<List<SystemError>> actual = ReliefCenterUtil.retrieveQuestionSystemsErrorsGetter.apply(mockRetrieveQuestionsResponseTO);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBuildCasmDelegateHeaderMap() throws Exception {
+        PowerMockito.mockStatic(UUID.class);
+        PowerMockito.when(UUID.randomUUID()).thenReturn(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+
+        PowerMockito.mockStatic(SimpleDateFormat.class);
+        SimpleDateFormat mockDateFormat = PowerMockito.mock(SimpleDateFormat.class);
+        whenNew(SimpleDateFormat.class).withArguments("YYYY-MM-dd'T' HH:mm:ss").thenReturn(mockDateFormat);
+        when(mockDateFormat.format(any(Date.class))).thenReturn("2024-03-19T12:34:56");
+
+        Map<String, String> expectedHeaderMap = new HashMap<>();
+        expectedHeaderMap.put("WF_SENDERMESSAGEID_HEADER", "00000000-0000-0000-0000-000000000001");
+        expectedHeaderMap.put("WF_CREATIONTIMESTAMP_HEADER", "2024-03-19T12:34:56");
+        expectedHeaderMap.put("WF_SENDERAPPLICATIONID_HEADER", "WF_SENDERAPPLICATIONID");
+        expectedHeaderMap.put("WF_SENDERHOSTNAME_HEADER_HEADER", "127.0.0.1");
+        expectedHeaderMap.put("WF_SESSIONID_HEADER", "unitOfWorkID");
+        expectedHeaderMap.put("CONTENT_TYPE_HEADER", "CONTENT_TYPE");
+
+        Map<String, String> actualHeaderMap = ReliefCenterUtil.buildCasmDelegateHeaderMap("unitOfWorkID");
+
+        assertEquals(expectedHeaderMap, actualHeaderMap);
+    }
+
+    // Add more tests for other methods as needed
+}
