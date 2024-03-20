@@ -35,59 +35,134 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-@Test
-    public void testMapAndPreparePossibleAnswers() {
-        RetrieveQuestionResponseBuilder builder = new RetrieveQuestionResponseBuilder();
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
-        List<com.wellsfargo.mwf.delegate.casm.retrievequestions.to.PossibleAnswers> inputList = new ArrayList<>();
-        com.wellsfargo.mwf.delegate.casm.retrievequestions.to.PossibleAnswers answer1 = new com.wellsfargo.mwf.delegate.casm.retrievequestions.to.PossibleAnswers();
-        answer1.setCode("A001");
-        answer1.setDescription("Option 1");
-        answer1.setSequence(1);
-        inputList.add(answer1);
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-        List<PossibleAnswers> result = builder.mapAndPreparePossibleAnswers(inputList);
+public class RetrieveQuestionServiceTest {
 
-        assertEquals(1, result.size());
-        assertEquals("A001", result.get(0).getCode());
-        assertEquals("Option 1", result.get(0).getDescription());
-        assertEquals(1, result.get(0).getSequence());
+    @Mock
+    DelegateRetryExecutionTemplate delegateRetryExecutionTemplate;
+
+    @Mock
+    Delegate<RetrieveQuestionsRequestTO, RetrieveQuestionsResponseTO> retrieveQuestionDelegate;
+
+    @InjectMocks
+    RetrieveQuestionService retrieveQuestionService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testSetMinPaymentAmountForQuestion() {
-        RetrieveQuestionResponseBuilder builder = new RetrieveQuestionResponseBuilder();
+    public void testRetrieveQuestion_Success() throws EnhancedException {
+        // Prepare test data
+        RetrieveQuestionBodyRequest request = new RetrieveQuestionBodyRequest();
+        Map<String, String> headerMap = new HashMap<>();
 
-        DomainServices domainServices = mock(DomainServices.class);
-        AccountManager accountManager = mock(AccountManager.class);
-        OnlineBankingSession onlineBankingSession = mock(OnlineBankingSession.class);
-        CustomerManager customerManager = mock(CustomerManager.class);
-        Account account = mock(Account.class);
+        // Mock dependencies behavior
+        RetrieveQuestionsResponseTO response = new RetrieveQuestionsResponseTO();
+        when(delegateRetryExecutionTemplate.execute(any(), any())).thenReturn(response);
 
-        when(businessServiceWrapper.getDomainServices()).thenReturn(domainServices);
-        when(domainServices.getOnlineBankingSession()).thenReturn(onlineBankingSession);
-        when(onlineBankingSession.getCustomerManager()).thenReturn(customerManager);
-        when(customerManager.getAccountManager()).thenReturn(accountManager);
-        when(accountManager.getAccountByNumber(anyString())).thenReturn(account);
+        // Invoke the method under test
+        RetrieveQuestionsResponseTO result = retrieveQuestionService.retrieveQuestion(request, headerMap);
 
-        QuestionAndAnswerData questionAndAnswerData = new QuestionAndAnswerData();
-        builder.setMinPaymentAmountForQuestion(questionAndAnswerData, "accountId");
-
-        assertEquals(account, questionAndAnswerData.getAccount());
+        // Verify the result
+        assertNotNull(result);
+        // Add more assertions based on the actual implementation
     }
 
     @Test
-    public void testSetDisclosureForQuestion() {
-        RetrieveQuestionResponseBuilder builder = new RetrieveQuestionResponseBuilder();
+    public void testRetrieveQuestion_ExceptionThrown() throws EnhancedException {
+        // Prepare test data
+        RetrieveQuestionBodyRequest request = new RetrieveQuestionBodyRequest();
+        Map<String, String> headerMap = new HashMap<>();
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getParameter("language")).thenReturn("en");
+        // Mock dependencies behavior
+        when(delegateRetryExecutionTemplate.execute(any(), any())).thenThrow(new EnhancedException("Error"));
 
-        QuestionAndAnswerData questionAndAnswerData = new QuestionAndAnswerData();
-        questionAndAnswerData.setQuestionCode("Q001");
-
-        builder.setDisclosureForQuestion(request, questionAndAnswerData);
-
-        assertEquals("Disclosure for Q001", questionAndAnswerData.getDisclosure());
+        // Verify that the method under test throws an EnhancedException
+        assertThrows(EnhancedException.class, () -> retrieveQuestionService.retrieveQuestion(request, headerMap));
     }
+
+    @Test
+    public void testCreateRetrieveQuestionRequest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, EnhancedException {
+        // Prepare test data
+        RetrieveQuestionBodyRequest request = new RetrieveQuestionBodyRequest();
+        Map<String, String> headerMap = new HashMap<>();
+
+        // Invoke the private method under test using reflection
+        Method method = RetrieveQuestionService.class.getDeclaredMethod("createRetrieveQuestionRequest", RetrieveQuestionBodyRequest.class, Map.class);
+        method.setAccessible(true);
+        RetrieveQuestionsRequestTO result = (RetrieveQuestionsRequestTO) method.invoke(retrieveQuestionService, request, headerMap);
+
+        // Verify the result
+        assertNotNull(result);
+        assertEquals("{}", result.getRawRequest());
+        assertEquals(headerMap, result.getHeaderMap());
+        assertEquals(ReliefCenterAPIConstants.RETRIEVE_QUESTION_DELEGATE_URI, result.getRequestURI());
+    }
+
+    @Test
+    public void testGetExecutionParameters() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        // Invoke the private method under test using reflection
+        Method method = RetrieveQuestionService.class.getDeclaredMethod("getExecutionParameters", String.class);
+        method.setAccessible(true);
+        ExecutionParameters result = (ExecutionParameters) method.invoke(retrieveQuestionService, "sessionId");
+
+        // Verify the result
+        assertNotNull(result);
+        assertEquals(System.getProperty(ReliefCenterAPIConstants.CLIENTSERVICEID), result.getClientServiceId());
+        assertEquals("sessionId", result.getSessionId());
+    }
+
+    @Test
+    public void testValidateResponse_NullResponse() throws EnhancedException {
+        // Prepare test data
+        RetrieveQuestionsResponseTO response = null;
+
+        // Verify that the method under test throws an EnhancedException
+        assertThrows(EnhancedException.class, () -> retrieveQuestionService.validateResponse(response));
+    }
+
+    @Test
+    public void testValidateResponse_WithSystemErrors() {
+        // Prepare test data
+        RetrieveQuestionsResponseTO response = new RetrieveQuestionsResponseTO();
+        RetrieveQuestionsResponse responseDetail = new RetrieveQuestionsResponse();
+        responseDetail.setSystemErrors(Collections.singletonList(new SystemError()));
+        response.setResponse(responseDetail);
+
+        // Verify that the method under test throws an EnhancedException
+        assertThrows(EnhancedException.class, () -> retrieveQuestionService.validateResponse(response));
+    }
+
+    @Test
+    public void testRetrieveQuenitonExecutionMethod() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        // Prepare test data
+        RetrieveQuestionBodyRequest retrieveQuestionRequest = new RetrieveQuestionBodyRequest();
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("key", "value");
+
+        // Invoke the private method under test using reflection
+        Method method = RetrieveQuestionService.class.getDeclaredMethod("retrieveQuenitonExecutionMethod", RetrieveQuestionBodyRequest.class, Map.class);
+        method.setAccessible(true);
+        Object result = method.invoke(retrieveQuestionService, retrieveQuestionRequest, headerMap);
+
+        // Verify the result
+        assertNotNull(result);
+        assertTrue(result instanceof ExecutionFunction);
+    }
+}
