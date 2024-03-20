@@ -37,72 +37,89 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import javax.servlet.http.HttpSession;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.mockito.MockitoAnnotations;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-public class RetrieveQuestionRequestBuilderTest {
+public class RetrieveQuestionResponseBuilderTest {
 
     @Mock
     BusinessServiceWrapper businessServiceWrapperMock;
 
     @Mock
-    HttpSession sessionMock;
+    HttpServletRequest requestMock;
 
-    @Test
-    public void testPrepareRetrievequestionBodyRequest_WithNonNullCurrentQuestion() {
-        // Mock dependencies
-        RetrieveQuestionRequestBuilder builder = new RetrieveQuestionRequestBuilder();
-        builder.setBusinessServiceWrapper(businessServiceWrapperMock);
-        
-        // Mock behavior for businessServiceWrapper.getDomainServices()
-        DomainServices domainServicesMock = Mockito.mock(DomainServices.class);
-        Mockito.when(businessServiceWrapperMock.getDomainServices()).thenReturn(domainServicesMock);
-        
-        // Mock session attributes
-        Mockito.when(sessionMock.getAttribute("CUSTOMER_LANGUAGE_CODE")).thenReturn("en-US");
+    @InjectMocks
+    RetrieveQuestionResponseBuilder responseBuilder;
 
-        // Create a dummy question and answer data
-        QuestionAndAnswerData currentQuestion = new QuestionAndAnswerData();
-        currentQuestion.setQuestionCode("Q123");
-        currentQuestion.setSelectedAnswer("A456");
-
-        // Call the method under test
-        RetrieveQuestionBodyRequest requestBody = builder.prepareRetrievequestionBodyRequest(sessionMock, currentQuestion, "123456");
-
-        // Assert the expected values in the requestBody
-        assertEquals("123456", requestBody.getUserSessionId());
-        assertEquals("en-US", requestBody.getPreferredLanguage());
-        assertEquals("XCC", requestBody.getProductCode());
-        assertEquals("Q123", requestBody.getCurrentQuestionCode());
-        assertEquals(1, requestBody.getCurrentChosenAnswerCodes().size());
-        assertEquals("A456", requestBody.getCurrentChosenAnswerCodes().get(0));
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void testPrepareRetrievequestionBodyRequest_WithNullCurrentQuestion() {
-        // Mock dependencies
-        RetrieveQuestionRequestBuilder builder = new RetrieveQuestionRequestBuilder();
-        builder.setBusinessServiceWrapper(businessServiceWrapperMock);
-        
-        // Mock behavior for businessServiceWrapper.getDomainServices()
-        DomainServices domainServicesMock = Mockito.mock(DomainServices.class);
-        Mockito.when(businessServiceWrapperMock.getDomainServices()).thenReturn(domainServicesMock);
-        
-        // Mock session attributes
-        Mockito.when(sessionMock.getAttribute("CUSTOMER_LANGUAGE_CODE")).thenReturn("en-US");
+    public void testMapRetrieveQuestionResponseToQuestionData_WithNonNullResponseAndData() {
+        // Mocking response object with data
+        RetrieveQuestionsResponseTO response = new RetrieveQuestionsResponseTO();
+        response.setResponse(new ResponseData());
+        List<QuestionData> questionDataList = new ArrayList<>();
+        QuestionData questionData = new QuestionData();
+        questionData.setQuestionCode("Q123");
+        questionData.setQuestionDescription("Question Description");
+        questionDataList.add(questionData);
+        response.getResponse().setData(questionDataList);
 
-        // Call the method under test with null current question
-        RetrieveQuestionBodyRequest requestBody = builder.prepareRetrievequestionBodyRequest(sessionMock, null, "123456");
+        // Mocking behavior for businessServiceWrapper.getDomainServices()
+        DomainServices domainServicesMock = mock(DomainServices.class);
+        when(businessServiceWrapperMock.getDomainServices()).thenReturn(domainServicesMock);
 
-        // Assert the expected values in the requestBody for default case
-        assertEquals("123456", requestBody.getUserSessionId());
-        assertEquals("en-US", requestBody.getPreferredLanguage());
-        assertEquals("XCC", requestBody.getProductCode());
-        assertEquals("DEFAULT_QUESTION_CODE", requestBody.getCurrentQuestionCode());
-        assertEquals(1, requestBody.getCurrentChosenAnswerCodes().size());
-        assertEquals("DEFAULT_ANSWER_CODE", requestBody.getCurrentChosenAnswerCodes().get(0));
+        // Mocking behavior for setMinPaymentAmountForQuestion method
+        when(domainServicesMock.getAccount(anyString())).thenReturn(new Account());
+
+        // Call the method under test
+        QuestionAndAnswerData questionAndAnswerData = responseBuilder.mapRetrieveQuestionResponseToQuestionData(requestMock, response, null, "123456");
+
+        // Verify the expected behavior
+        assertEquals("Q123", questionAndAnswerData.getQuestionCode());
+        assertEquals("Question Description", questionAndAnswerData.getQuestionDescription());
+        // Verify that setMinPaymentAmountForQuestion method was called
+        verify(responseBuilder, times(1)).setMinPaymentAmountForQuestion(any(), eq("123456"));
+    }
+
+    @Test
+    public void testMapRetrieveQuestionResponseToQuestionData_WithNullResponse() {
+        // Mocking behavior for businessServiceWrapper.getDomainServices()
+        when(businessServiceWrapperMock.getDomainServices()).thenReturn(null);
+
+        // Call the method under test with null response
+        QuestionAndAnswerData questionAndAnswerData = responseBuilder.mapRetrieveQuestionResponseToQuestionData(requestMock, null, null, "123456");
+
+        // Verify that null is returned
+        assertEquals(null, questionAndAnswerData);
+    }
+
+    @Test
+    public void testMapRetrieveQuestionResponseToQuestionData_WithEmptyResponse() {
+        // Mocking response object with null response data
+        RetrieveQuestionsResponseTO response = new RetrieveQuestionsResponseTO();
+        response.setResponse(null);
+
+        // Mocking behavior for businessServiceWrapper.getDomainServices()
+        DomainServices domainServicesMock = mock(DomainServices.class);
+        when(businessServiceWrapperMock.getDomainServices()).thenReturn(domainServicesMock);
+
+        // Call the method under test with empty response
+        QuestionAndAnswerData questionAndAnswerData = responseBuilder.mapRetrieveQuestionResponseToQuestionData(requestMock, response, null, "123456");
+
+        // Verify that null is returned
+        assertEquals(null, questionAndAnswerData);
     }
 }
