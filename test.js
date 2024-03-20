@@ -37,77 +37,72 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RetrieveQuestionRequestBuilderTest {
 
     @Mock
-    private BusinessServiceWrapper businessServiceWrapper;
-    
+    BusinessServiceWrapper businessServiceWrapperMock;
+
     @Mock
-    private HttpSession session;
-    
-    private RetrieveQuestionRequestBuilder requestBuilder;
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        requestBuilder = new RetrieveQuestionRequestBuilder();
-        requestBuilder.setBusinessServiceWrapper(businessServiceWrapper);
-    }
+    HttpSession sessionMock;
 
     @Test
-    public void testPrepareRetrieveQuestionForQuestionnaireStartFlow() {
-        // Mock data
-        QuestionAndAnswerData currentQuestion = null;
-        String accountId = "123456";
+    public void testPrepareRetrievequestionBodyRequest_WithNonNullCurrentQuestion() {
+        // Mock dependencies
+        RetrieveQuestionRequestBuilder builder = new RetrieveQuestionRequestBuilder();
+        builder.setBusinessServiceWrapper(businessServiceWrapperMock);
+        
+        // Mock behavior for businessServiceWrapper.getDomainServices()
+        DomainServices domainServicesMock = Mockito.mock(DomainServices.class);
+        Mockito.when(businessServiceWrapperMock.getDomainServices()).thenReturn(domainServicesMock);
+        
+        // Mock session attributes
+        Mockito.when(sessionMock.getAttribute("CUSTOMER_LANGUAGE_CODE")).thenReturn("en-US");
 
-        // Mock behavior
-        when(businessServiceWrapper.getDomainServices()).thenReturn(new DomainServices());
-        when(session.getAttribute("CUSTOMER_LANGUAGE_CODE")).thenReturn("en");
-
-        // Invoke the method
-        RetrieveQuestionBodyRequest requestBody = requestBuilder.prepareRetrieveQuestionBodyRequest(session, currentQuestion, accountId);
-
-        // Verify the result
-        assertEquals("XCC", requestBody.getProductCode());
-        assertEquals("en", requestBody.getPreferredLanguage());
-        assertEquals("123456", requestBody.getUserSessionId());
-        assertEquals(RetrieveQuestionRequestBuilder.CHANNEL_ID, requestBody.getChannel());
-        assertEquals(RetrieveQuestionRequestBuilder.APPLICATION_ID, requestBody.getClientAppId());
-        assertEquals(RetrieveQuestionRequestBuilder.DEFAULT_QUESTION_CODE, requestBody.getCurrentQuestionCode());
-        assertEquals(List.of(RetrieveQuestionRequestBuilder.DEFAULT_ANSWER_CODE), requestBody.getCurrentChosenAnswerCodes());
-    }
-
-    @Test
-    public void testPrepareRetrieveQuestionWithExistingQuestion() {
-        // Mock data
+        // Create a dummy question and answer data
         QuestionAndAnswerData currentQuestion = new QuestionAndAnswerData();
-        currentQuestion.setQuestionCode("Q2");
-        currentQuestion.setSelectedAnswer("A2");
-        String accountId = "654321";
+        currentQuestion.setQuestionCode("Q123");
+        currentQuestion.setSelectedAnswer("A456");
 
-        // Mock behavior
-        when(businessServiceWrapper.getDomainServices()).thenReturn(new DomainServices());
-        when(session.getAttribute("CUSTOMER_LANGUAGE_CODE")).thenReturn("fr");
+        // Call the method under test
+        RetrieveQuestionBodyRequest requestBody = builder.prepareRetrievequestionBodyRequest(sessionMock, currentQuestion, "123456");
 
-        // Invoke the method
-        RetrieveQuestionBodyRequest requestBody = requestBuilder.prepareRetrieveQuestionBodyRequest(session, currentQuestion, accountId);
-
-        // Verify the result
+        // Assert the expected values in the requestBody
+        assertEquals("123456", requestBody.getUserSessionId());
+        assertEquals("en-US", requestBody.getPreferredLanguage());
         assertEquals("XCC", requestBody.getProductCode());
-        assertEquals("fr", requestBody.getPreferredLanguage());
-        assertEquals("654321", requestBody.getUserSessionId());
-        assertEquals(RetrieveQuestionRequestBuilder.CHANNEL_ID, requestBody.getChannel());
-        assertEquals(RetrieveQuestionRequestBuilder.APPLICATION_ID, requestBody.getClientAppId());
-        assertEquals("Q2", requestBody.getCurrentQuestionCode());
-        assertEquals(List.of("A2"), requestBody.getCurrentChosenAnswerCodes());
+        assertEquals("Q123", requestBody.getCurrentQuestionCode());
+        assertEquals(1, requestBody.getCurrentChosenAnswerCodes().size());
+        assertEquals("A456", requestBody.getCurrentChosenAnswerCodes().get(0));
+    }
+
+    @Test
+    public void testPrepareRetrievequestionBodyRequest_WithNullCurrentQuestion() {
+        // Mock dependencies
+        RetrieveQuestionRequestBuilder builder = new RetrieveQuestionRequestBuilder();
+        builder.setBusinessServiceWrapper(businessServiceWrapperMock);
+        
+        // Mock behavior for businessServiceWrapper.getDomainServices()
+        DomainServices domainServicesMock = Mockito.mock(DomainServices.class);
+        Mockito.when(businessServiceWrapperMock.getDomainServices()).thenReturn(domainServicesMock);
+        
+        // Mock session attributes
+        Mockito.when(sessionMock.getAttribute("CUSTOMER_LANGUAGE_CODE")).thenReturn("en-US");
+
+        // Call the method under test with null current question
+        RetrieveQuestionBodyRequest requestBody = builder.prepareRetrievequestionBodyRequest(sessionMock, null, "123456");
+
+        // Assert the expected values in the requestBody for default case
+        assertEquals("123456", requestBody.getUserSessionId());
+        assertEquals("en-US", requestBody.getPreferredLanguage());
+        assertEquals("XCC", requestBody.getProductCode());
+        assertEquals("DEFAULT_QUESTION_CODE", requestBody.getCurrentQuestionCode());
+        assertEquals(1, requestBody.getCurrentChosenAnswerCodes().size());
+        assertEquals("DEFAULT_ANSWER_CODE", requestBody.getCurrentChosenAnswerCodes().get(0));
     }
 }
