@@ -42,9 +42,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class RetrieveQuestionResponseBuilderTest {
@@ -55,103 +54,110 @@ public class RetrieveQuestionResponseBuilderTest {
     @Mock
     BusinessServiceWrapper businessServiceWrapper;
 
-    RetrieveQuestionResponseBuilder responseBuilder;
-
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        responseBuilder = new RetrieveQuestionResponseBuilder();
-        responseBuilder.setBusinessServiceWrapper(businessServiceWrapper);
+    }
+
+    @Test
+    public void testMapRetrieveQuestionResponseToQuestionData_WithNullResponse() {
+        RetrieveQuestionResponseBuilder responseBuilder = new RetrieveQuestionResponseBuilder();
+
+        QuestionAndAnswerData result = responseBuilder.mapRetrieveQuestionResponseToQuestionData(request, null, null, "123456");
+
+        assertEquals(new QuestionAndAnswerData(), result);
     }
 
     @Test
     public void testMapRetrieveQuestionResponseToQuestionData_WithNonNullResponse() {
-        RetrieveQuestionsResponseTO responseTO = mock(RetrieveQuestionsResponseTO.class);
-        RetrieveQuestionsResponseTO.ResponseData responseData = mock(RetrieveQuestionsResponseTO.ResponseData.class);
-        QuestionData questionData = mock(QuestionData.class);
-
-        when(responseTO.getResponse()).thenReturn(responseData);
-        when(responseData.getData()).thenReturn(questionData);
+        RetrieveQuestionResponseBuilder responseBuilder = new RetrieveQuestionResponseBuilder();
+        RetrieveQuestionsResponseTO responseTO = new RetrieveQuestionsResponseTO();
+        RetrieveQuestionsResponseTO.ResponseData responseData = new RetrieveQuestionsResponseTO.ResponseData();
+        responseData.setData(new QuestionData());
+        responseTO.setResponse(responseData);
 
         when(request.getAttribute("accountId")).thenReturn("123456");
 
-        QuestionAndAnswerData parentQuestion = new QuestionAndAnswerData();
-        QuestionAndAnswerData result = responseBuilder.mapRetrieveQuestionResponseToQuestionData(request, responseTO, parentQuestion, "123456");
+        QuestionAndAnswerData result = responseBuilder.mapRetrieveQuestionResponseToQuestionData(request, responseTO, null, "123456");
 
-        assertEquals(parentQuestion, result);
+        assertEquals(new QuestionAndAnswerData(), result);
     }
 
     @Test
-    public void testMapAndPreparePossibleAnswers() {
-        com.wellsfargo.mwf.delegate.casm.retrievequestions.to.PossibleAnswers possibleAnswer = mock(com.wellsfargo.mwf.delegate.casm.retrievequestions.to.PossibleAnswers.class);
-        when(possibleAnswer.getCode()).thenReturn("A");
-        when(possibleAnswer.getDescription()).thenReturn("Option A");
-        when(possibleAnswer.getSequence()).thenReturn(1);
-        List<com.wellsfargo.mwf.delegate.casm.retrievequestions.to.PossibleAnswers> possibleAnswers = Collections.singletonList(possibleAnswer);
+    public void testMapRetrieveQuestionResponseToQuestionData_WithNonNullData() {
+        RetrieveQuestionResponseBuilder responseBuilder = new RetrieveQuestionResponseBuilder();
+        RetrieveQuestionsResponseTO responseTO = new RetrieveQuestionsResponseTO();
+        RetrieveQuestionsResponseTO.ResponseData responseData = new RetrieveQuestionsResponseTO.ResponseData();
+        QuestionData questionData = new QuestionData();
+        questionData.setQuestionCode("Q001");
+        questionData.setQuestionDescription("Description");
+        responseData.setData(questionData);
+        responseTO.setResponse(responseData);
 
-        List<PossibleAnswers> result = responseBuilder.mapAndPreparePossibleAnswers(possibleAnswers);
+        QuestionAndAnswerData expected = new QuestionAndAnswerData();
+        expected.setQuestionCode("Q001");
+        expected.setQuestionDescription("Description");
 
-        assertEquals(1, result.size());
-        assertEquals("A", result.get(0).getCode());
-        assertEquals("Option A", result.get(0).getDescription());
-        assertEquals(1, result.get(0).getSequence());
+        QuestionAndAnswerData result = responseBuilder.mapRetrieveQuestionResponseToQuestionData(request, responseTO, null, "123456");
+
+        assertEquals(expected, result);
     }
 
     @Test
-    public void testSetMinPaymentAmountForQuestion_WithNullAccount() {
-        QuestionAndAnswerData questionAndAnswerData = new QuestionAndAnswerData();
+    public void testMapRetrieveQuestionResponseToQuestionData_WithPossibleAnswers() {
+        RetrieveQuestionResponseBuilder responseBuilder = new RetrieveQuestionResponseBuilder();
+        RetrieveQuestionsResponseTO responseTO = new RetrieveQuestionsResponseTO();
+        RetrieveQuestionsResponseTO.ResponseData responseData = new RetrieveQuestionsResponseTO.ResponseData();
+        QuestionData questionData = new QuestionData();
+        questionData.setPossibleAnswers(Collections.singletonList(new com.wellsfargo.mwf.delegate.casm.retrievequestions.to.PossibleAnswers()));
+        responseData.setData(questionData);
+        responseTO.setResponse(responseData);
+
+        QuestionAndAnswerData result = responseBuilder.mapRetrieveQuestionResponseToQuestionData(request, responseTO, null, "123456");
+
+        assertEquals(1, result.getPossibleAnswers().size());
+    }
+
+    @Test
+    public void testMapRetrieveQuestionResponseToQuestionData_WithMinPaymentAmount() {
+        RetrieveQuestionResponseBuilder responseBuilder = new RetrieveQuestionResponseBuilder();
+        RetrieveQuestionsResponseTO responseTO = new RetrieveQuestionsResponseTO();
+        RetrieveQuestionsResponseTO.ResponseData responseData = new RetrieveQuestionsResponseTO.ResponseData();
+        QuestionData questionData = new QuestionData();
+        questionData.setQuestionCode("Q002");
+        responseData.setData(questionData);
+        responseTO.setResponse(responseData);
 
         when(businessServiceWrapper.getDomainServices()).thenReturn(new DomainServices());
+        Account account = mock(Account.class);
         when(businessServiceWrapper.getDomainServices().getOnlineBankingSession()).thenReturn(mock(OnLineBankingSession.class));
         when(businessServiceWrapper.getDomainServices().getOnlineBankingSession().getCustomerManager()).thenReturn(mock(CustomerManager.class));
         when(businessServiceWrapper.getDomainServices().getOnlineBankingSession().getCustomerManager().getAccountManager()).thenReturn(mock(AccountManager.class));
-        when(businessServiceWrapper.getDomainServices().getOnlineBankingSession().getCustomerManager().getAccountManager().getAccount(any())).thenReturn(null);
+        when(businessServiceWrapper.getDomainServices().getOnlineBankingSession().getCustomerManager().getAccountManager().getAccount(anyString())).thenReturn(account);
 
-        responseBuilder.setMinPaymentAmountForQuestion(questionAndAnswerData, "123456");
-
-        assertEquals(0.0, questionAndAnswerData.getMinPaymentAmount(), 0.0);
-    }
-
-    @Test
-    public void testSetMinPaymentAmountForQuestion_WithNonNullAccount() {
-        QuestionAndAnswerData questionAndAnswerData = new QuestionAndAnswerData();
-        Account account = mock(Account.class);
         Balance balance = new Balance();
         balance.setAmount(100.0);
-
-        when(businessServiceWrapper.getDomainServices()).thenReturn(new DomainServices());
-        when(businessServiceWrapper.getDomainServices().getOnlineBankingSession()).thenReturn(mock(OnLineBankingSession.class));
-        when(businessServiceWrapper.getDomainServices().getOnlineBankingSession().getCustomerManager()).thenReturn(mock(CustomerManager.class));
-        when(businessServiceWrapper.getDomainServices().getOnlineBankingSession().getCustomerManager().getAccountManager()).thenReturn(mock(AccountManager.class));
-        when(businessServiceWrapper.getDomainServices().getOnlineBankingSession().getCustomerManager().getAccountManager().getAccount(any())).thenReturn(account);
         when(account.getBalanceByType(any())).thenReturn(balance);
 
-        responseBuilder.setMinPaymentAmountForQuestion(questionAndAnswerData, "123456");
+        QuestionAndAnswerData result = responseBuilder.mapRetrieveQuestionResponseToQuestionData(request, responseTO, null, "123456");
 
-        assertEquals(100.0, questionAndAnswerData.getMinPaymentAmount(), 0.0);
+        assertEquals("100.0", result.getMinPaymentAmount());
     }
 
     @Test
-    public void testSetDisclosureForQuestion_WithNonBlankDisclosure() {
-        QuestionAndAnswerData questionAndAnswerData = new QuestionAndAnswerData();
-        questionAndAnswerData.setQuestionCode("code");
+    public void testMapRetrieveQuestionResponseToQuestionData_WithDisclosure() {
+        RetrieveQuestionResponseBuilder responseBuilder = new RetrieveQuestionResponseBuilder();
+        RetrieveQuestionsResponseTO responseTO = new RetrieveQuestionsResponseTO();
+        RetrieveQuestionsResponseTO.ResponseData responseData = new RetrieveQuestionsResponseTO.ResponseData();
+        QuestionData questionData = new QuestionData();
+        questionData.setQuestionCode("Q003");
+        responseData.setData(questionData);
+        responseTO.setResponse(responseData);
 
-        when(request.getAttribute(any())).thenReturn("disclosure");
+        when(request.getAttribute(anyString())).thenReturn("disclosure");
 
-        responseBuilder.setDisclosureForQuestion(request, questionAndAnswerData);
+        QuestionAndAnswerData result = responseBuilder.mapRetrieveQuestionResponseToQuestionData(request, responseTO, null, "123456");
 
-        assertEquals("disclosure", questionAndAnswerData.getDisclosure());
-    }
-
-    @Test
-    public void testSetDisclosureForQuestion_WithBlankDisclosure() {
-        QuestionAndAnswerData questionAndAnswerData = new QuestionAndAnswerData();
-        questionAndAnswerData.setQuestionCode("code");
-
-        when(request.getAttribute(any())).thenReturn("");
-
-        responseBuilder.setDisclosureForQuestion(request, questionAndAnswerData);
-
-        assertEquals("", questionAndAnswerData.getDisclosure());
+        assertEquals("disclosure", result.getDisclosure());
     }
 }
