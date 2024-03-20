@@ -39,87 +39,119 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class RetrieveQuestionResponseBuilderTest {
 
     @Mock
-    BusinessServiceWrapper businessServiceWrapperMock;
+    HttpServletRequest request;
 
     @Mock
-    HttpServletRequest requestMock;
+    BusinessServiceWrapper businessServiceWrapper;
 
-    @InjectMocks
     RetrieveQuestionResponseBuilder responseBuilder;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    public void testMapRetrieveQuestionResponseToQuestionData_WithNonNullResponseAndData() {
-        // Mocking response object with data
-        RetrieveQuestionsResponseTO response = new RetrieveQuestionsResponseTO();
-        response.setResponse(new ResponseData());
-        List<QuestionData> questionDataList = new ArrayList<>();
-        QuestionData questionData = new QuestionData();
-        questionData.setQuestionCode("Q123");
-        questionData.setQuestionDescription("Question Description");
-        questionDataList.add(questionData);
-        response.getResponse().setData(questionDataList);
-
-        // Mocking behavior for businessServiceWrapper.getDomainServices()
-        DomainServices domainServicesMock = mock(DomainServices.class);
-        when(businessServiceWrapperMock.getDomainServices()).thenReturn(domainServicesMock);
-
-        // Mocking behavior for setMinPaymentAmountForQuestion method
-        when(domainServicesMock.getAccount(anyString())).thenReturn(new Account());
-
-        // Call the method under test
-        QuestionAndAnswerData questionAndAnswerData = responseBuilder.mapRetrieveQuestionResponseToQuestionData(requestMock, response, null, "123456");
-
-        // Verify the expected behavior
-        assertEquals("Q123", questionAndAnswerData.getQuestionCode());
-        assertEquals("Question Description", questionAndAnswerData.getQuestionDescription());
-        // Verify that setMinPaymentAmountForQuestion method was called
-        verify(responseBuilder, times(1)).setMinPaymentAmountForQuestion(any(), eq("123456"));
+        responseBuilder = new RetrieveQuestionResponseBuilder();
+        responseBuilder.setBusinessServiceWrapper(businessServiceWrapper);
     }
 
     @Test
     public void testMapRetrieveQuestionResponseToQuestionData_WithNullResponse() {
-        // Mocking behavior for businessServiceWrapper.getDomainServices()
-        when(businessServiceWrapperMock.getDomainServices()).thenReturn(null);
+        QuestionAndAnswerData parentQuestion = new QuestionAndAnswerData();
+        QuestionAndAnswerData result = responseBuilder.mapRetrieveQuestionResponseToQuestionData(request, null, parentQuestion, "123456");
 
-        // Call the method under test with null response
-        QuestionAndAnswerData questionAndAnswerData = responseBuilder.mapRetrieveQuestionResponseToQuestionData(requestMock, null, null, "123456");
-
-        // Verify that null is returned
-        assertEquals(null, questionAndAnswerData);
+        assertEquals(parentQuestion, result);
     }
 
     @Test
-    public void testMapRetrieveQuestionResponseToQuestionData_WithEmptyResponse() {
-        // Mocking response object with null response data
-        RetrieveQuestionsResponseTO response = new RetrieveQuestionsResponseTO();
-        response.setResponse(null);
+    public void testMapRetrieveQuestionResponseToQuestionData_WithNonNullResponse() {
+        RetrieveQuestionsResponseTO responseTO = new RetrieveQuestionsResponseTO();
+        RetrieveQuestionsResponseTO.ResponseData responseData = new RetrieveQuestionsResponseTO.ResponseData();
+        responseData.setData(new QuestionData());
+        responseTO.setResponse(responseData);
 
-        // Mocking behavior for businessServiceWrapper.getDomainServices()
-        DomainServices domainServicesMock = mock(DomainServices.class);
-        when(businessServiceWrapperMock.getDomainServices()).thenReturn(domainServicesMock);
+        when(request.getAttribute("accountId")).thenReturn("123456");
 
-        // Call the method under test with empty response
-        QuestionAndAnswerData questionAndAnswerData = responseBuilder.mapRetrieveQuestionResponseToQuestionData(requestMock, response, null, "123456");
+        QuestionAndAnswerData parentQuestion = new QuestionAndAnswerData();
+        QuestionAndAnswerData result = responseBuilder.mapRetrieveQuestionResponseToQuestionData(request, responseTO, parentQuestion, "123456");
 
-        // Verify that null is returned
-        assertEquals(null, questionAndAnswerData);
+        assertEquals(parentQuestion, result);
+    }
+
+    @Test
+    public void testMapAndPreparePossibleAnswers() {
+        com.wellsfargo.mwf.delegate.casm.retrievequestions.to.PossibleAnswers possibleAnswer = new com.wellsfargo.mwf.delegate.casm.retrievequestions.to.PossibleAnswers();
+        possibleAnswer.setCode("A");
+        possibleAnswer.setDescription("Option A");
+        possibleAnswer.setSequence(1);
+        List<com.wellsfargo.mwf.delegate.casm.retrievequestions.to.PossibleAnswers> possibleAnswers = Collections.singletonList(possibleAnswer);
+
+        List<PossibleAnswers> result = responseBuilder.mapAndPreparePossibleAnswers(possibleAnswers);
+
+        assertEquals(1, result.size());
+        assertEquals("A", result.get(0).getCode());
+        assertEquals("Option A", result.get(0).getDescription());
+        assertEquals(1, result.get(0).getSequence());
+    }
+
+    @Test
+    public void testSetMinPaymentAmountForQuestion_WithNullAccount() {
+        QuestionAndAnswerData questionAndAnswerData = new QuestionAndAnswerData();
+
+        when(businessServiceWrapper.getDomainServices()).thenReturn(new DomainServices());
+        when(businessServiceWrapper.getDomainServices().getAccount(anyString())).thenReturn(null);
+
+        responseBuilder.setMinPaymentAmountForQuestion(questionAndAnswerData, "123456");
+
+        assertEquals(0.0, questionAndAnswerData.getMinPaymentAmount(), 0.0);
+    }
+
+    @Test
+    public void testSetMinPaymentAmountForQuestion_WithNonNullAccount() {
+        QuestionAndAnswerData questionAndAnswerData = new QuestionAndAnswerData();
+        Account account = mock(Account.class);
+        Balance balance = new Balance();
+        balance.setAmount(100.0);
+        when(account.getBalanceByType(any())).thenReturn(balance);
+
+        when(businessServiceWrapper.getDomainServices()).thenReturn(new DomainServices());
+        when(businessServiceWrapper.getDomainServices().getAccount(anyString())).thenReturn(account);
+
+        responseBuilder.setMinPaymentAmountForQuestion(questionAndAnswerData, "123456");
+
+        assertEquals(100.0, questionAndAnswerData.getMinPaymentAmount(), 0.0);
+    }
+
+    @Test
+    public void testSetDisclosureForQuestion_WithBlankDisclosure() {
+        QuestionAndAnswerData questionAndAnswerData = new QuestionAndAnswerData();
+        questionAndAnswerData.setQuestionCode("code");
+
+        when(request.getAttribute(anyString())).thenReturn("");
+
+        responseBuilder.setDisclosureForQuestion(request, questionAndAnswerData);
+
+        assertEquals("", questionAndAnswerData.getDisclosure());
+    }
+
+    @Test
+    public void testSetDisclosureForQuestion_WithNonBlankDisclosure() {
+        QuestionAndAnswerData questionAndAnswerData = new QuestionAndAnswerData();
+        questionAndAnswerData.setQuestionCode("code");
+
+        when(request.getAttribute(anyString())).thenReturn("disclosure");
+
+        responseBuilder.setDisclosureForQuestion(request, questionAndAnswerData);
+
+        assertEquals("disclosure", questionAndAnswerData.getDisclosure());
     }
 }
