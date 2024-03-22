@@ -36,75 +36,80 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 import org.junit.Test;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.HashMap;
+
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@RunWith(MockitoJUnitRunner.class)
 public class FinancialHardshipProcessorTest {
 
+    @Mock
+    private FinancialHardshipRequestBuilder requestBuilder;
+
+    @Mock
+    private FinancialHardshipService service;
+
+    @InjectMocks
+    private FinancialHardshipProcessor processor;
+
     @Test
-    public void testProcessRetrieveQuestionnaireData_Success() {
-        // Mock dependencies
-        FinancialHardshipRequestBuilder requestBuilder = mock(FinancialHardshipRequestBuilder.class);
-        FinancialHardshipService service = mock(FinancialHardshipService.class);
-        
-        // Create test instance
-        FinancialHardshipProcessor processor = new FinancialHardshipProcessor();
-        processor.financialHardshipRequestBuilder = requestBuilder;
-        processor.financialHardshipService = service;
-        
+    public void testProcessRetrieveQuestionnaireData_Success() throws EnhancedException {
         // Prepare test data
         RetrieveQuestionModel retrieveQuestionModel = new RetrieveQuestionModel();
         retrieveQuestionModel.setActivityO("SomeActivity");
-        retrieveQuestionModel.setQuestionDataMap(new HashMap<>()); // assuming this is needed
-        
+        retrieveQuestionModel.setQuestionDataMap(new HashMap<>());
+
         // Stub method calls
         when(requestBuilder.prepareRetrieveQuestionRequest(retrieveQuestionModel))
-            .thenReturn(new RetrieveQuestionRequest());
+                .thenReturn(new RetrieveQuestionRequest());
         when(service.retrieveQuestion(any(), any()))
-            .thenReturn(new QuestionAndAnswerData()); // assuming this is needed
-        
+                .thenReturn(new QuestionAndAnswerData());
+
         // Call the method under test
         FinancialHardshipData result = processor.processRetrieveQuestionnaireData(retrieveQuestionModel);
-        
+
         // Verify the behavior
         assertNotNull(result);
-        // Add more assertions as needed
+        assertNotNull(result.getQuestionAndAnswer());
+        assertTrue(result.getNavigationLink().size() > 0);
+        verify(processor, times(1)).getNavigationLinks();
     }
-    
+
     @Test
-    public void testProcessRetrieveQuestionnaireData_Exception() {
-        // Mock dependencies
-        FinancialHardshipRequestBuilder requestBuilder = mock(FinancialHardshipRequestBuilder.class);
-        FinancialHardshipService service = mock(FinancialHardshipService.class);
-        
-        // Create test instance
-        FinancialHardshipProcessor processor = new FinancialHardshipProcessor();
-        processor.financialHardshipRequestBuilder = requestBuilder;
-        processor.financialHardshipService = service;
-        
+    public void testProcessRetrieveQuestionnaireData_Exception() throws EnhancedException {
         // Prepare test data
         RetrieveQuestionModel retrieveQuestionModel = new RetrieveQuestionModel();
         retrieveQuestionModel.setActivityO("SomeActivity");
-        
+
         // Stub method calls to throw an exception
         when(requestBuilder.prepareRetrieveQuestionRequest(retrieveQuestionModel))
-            .thenThrow(new EnhancedException("Error message"));
-        
+                .thenThrow(new EnhancedException("Error message"));
+
         // Call the method under test
         FinancialHardshipData result = processor.processRetrieveQuestionnaireData(retrieveQuestionModel);
-        
+
         // Verify the behavior
         assertNotNull(result);
-        // Add more assertions as needed
+        assertNull(result.getQuestionAndAnswer());
+        assertTrue(result.getNavigationLink().isEmpty());
+        verify(processor, times(0)).getNavigationLinks(); // No invocation expected due to exception
     }
-    
+
     @Test
     public void testGetFinancialHardship() {
         // Call the static method directly
         FinancialHardshipData result = FinancialHardshipProcessor.getFinancialHardship("SomeActivity");
-        
+
         // Verify the behavior
         assertNotNull(result);
-        // Add more assertions as needed
+        assertEquals("", result.getType());
+        assertNull(result.getCmsData());
     }
 }
