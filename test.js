@@ -35,134 +35,76 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Test;
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
-public class RetrieveQuestionServiceTest {
-
-    @Mock
-    DelegateRetryExecutionTemplate delegateRetryExecutionTemplate;
-
-    @Mock
-    Delegate<RetrieveQuestionsRequestTO, RetrieveQuestionsResponseTO> retrieveQuestionDelegate;
-
-    @InjectMocks
-    RetrieveQuestionService retrieveQuestionService;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+public class FinancialHardshipProcessorTest {
 
     @Test
-    public void testRetrieveQuestion_Success() throws EnhancedException {
+    public void testProcessRetrieveQuestionnaireData_Success() {
+        // Mock dependencies
+        FinancialHardshipRequestBuilder requestBuilder = mock(FinancialHardshipRequestBuilder.class);
+        FinancialHardshipService service = mock(FinancialHardshipService.class);
+        
+        // Create test instance
+        FinancialHardshipProcessor processor = new FinancialHardshipProcessor();
+        processor.financialHardshipRequestBuilder = requestBuilder;
+        processor.financialHardshipService = service;
+        
         // Prepare test data
-        RetrieveQuestionBodyRequest request = new RetrieveQuestionBodyRequest();
-        Map<String, String> headerMap = new HashMap<>();
-
-        // Mock dependencies behavior
-        RetrieveQuestionsResponseTO response = new RetrieveQuestionsResponseTO();
-        when(delegateRetryExecutionTemplate.execute(any(), any())).thenReturn(response);
-
-        // Invoke the method under test
-        RetrieveQuestionsResponseTO result = retrieveQuestionService.retrieveQuestion(request, headerMap);
-
-        // Verify the result
+        RetrieveQuestionModel retrieveQuestionModel = new RetrieveQuestionModel();
+        retrieveQuestionModel.setActivityO("SomeActivity");
+        retrieveQuestionModel.setQuestionDataMap(new HashMap<>()); // assuming this is needed
+        
+        // Stub method calls
+        when(requestBuilder.prepareRetrieveQuestionRequest(retrieveQuestionModel))
+            .thenReturn(new RetrieveQuestionRequest());
+        when(service.retrieveQuestion(any(), any()))
+            .thenReturn(new QuestionAndAnswerData()); // assuming this is needed
+        
+        // Call the method under test
+        FinancialHardshipData result = processor.processRetrieveQuestionnaireData(retrieveQuestionModel);
+        
+        // Verify the behavior
         assertNotNull(result);
-        // Add more assertions based on the actual implementation
+        // Add more assertions as needed
     }
-
+    
     @Test
-    public void testRetrieveQuestion_ExceptionThrown() throws EnhancedException {
+    public void testProcessRetrieveQuestionnaireData_Exception() {
+        // Mock dependencies
+        FinancialHardshipRequestBuilder requestBuilder = mock(FinancialHardshipRequestBuilder.class);
+        FinancialHardshipService service = mock(FinancialHardshipService.class);
+        
+        // Create test instance
+        FinancialHardshipProcessor processor = new FinancialHardshipProcessor();
+        processor.financialHardshipRequestBuilder = requestBuilder;
+        processor.financialHardshipService = service;
+        
         // Prepare test data
-        RetrieveQuestionBodyRequest request = new RetrieveQuestionBodyRequest();
-        Map<String, String> headerMap = new HashMap<>();
-
-        // Mock dependencies behavior
-        when(delegateRetryExecutionTemplate.execute(any(), any())).thenThrow(new EnhancedException("Error"));
-
-        // Verify that the method under test throws an EnhancedException
-        assertThrows(EnhancedException.class, () -> retrieveQuestionService.retrieveQuestion(request, headerMap));
-    }
-
-    @Test
-    public void testCreateRetrieveQuestionRequest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, EnhancedException {
-        // Prepare test data
-        RetrieveQuestionBodyRequest request = new RetrieveQuestionBodyRequest();
-        Map<String, String> headerMap = new HashMap<>();
-
-        // Invoke the private method under test using reflection
-        Method method = RetrieveQuestionService.class.getDeclaredMethod("createRetrieveQuestionRequest", RetrieveQuestionBodyRequest.class, Map.class);
-        method.setAccessible(true);
-        RetrieveQuestionsRequestTO result = (RetrieveQuestionsRequestTO) method.invoke(retrieveQuestionService, request, headerMap);
-
-        // Verify the result
+        RetrieveQuestionModel retrieveQuestionModel = new RetrieveQuestionModel();
+        retrieveQuestionModel.setActivityO("SomeActivity");
+        
+        // Stub method calls to throw an exception
+        when(requestBuilder.prepareRetrieveQuestionRequest(retrieveQuestionModel))
+            .thenThrow(new EnhancedException("Error message"));
+        
+        // Call the method under test
+        FinancialHardshipData result = processor.processRetrieveQuestionnaireData(retrieveQuestionModel);
+        
+        // Verify the behavior
         assertNotNull(result);
-        assertEquals("{}", result.getRawRequest());
-        assertEquals(headerMap, result.getHeaderMap());
-        assertEquals(ReliefCenterAPIConstants.RETRIEVE_QUESTION_DELEGATE_URI, result.getRequestURI());
+        // Add more assertions as needed
     }
-
+    
     @Test
-    public void testGetExecutionParameters() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        // Invoke the private method under test using reflection
-        Method method = RetrieveQuestionService.class.getDeclaredMethod("getExecutionParameters", String.class);
-        method.setAccessible(true);
-        ExecutionParameters result = (ExecutionParameters) method.invoke(retrieveQuestionService, "sessionId");
-
-        // Verify the result
+    public void testGetFinancialHardship() {
+        // Call the static method directly
+        FinancialHardshipData result = FinancialHardshipProcessor.getFinancialHardship("SomeActivity");
+        
+        // Verify the behavior
         assertNotNull(result);
-        assertEquals(System.getProperty(ReliefCenterAPIConstants.CLIENTSERVICEID), result.getClientServiceId());
-        assertEquals("sessionId", result.getSessionId());
-    }
-
-    @Test
-    public void testValidateResponse_NullResponse() throws EnhancedException {
-        // Prepare test data
-        RetrieveQuestionsResponseTO response = null;
-
-        // Verify that the method under test throws an EnhancedException
-        assertThrows(EnhancedException.class, () -> retrieveQuestionService.validateResponse(response));
-    }
-
-    @Test
-    public void testValidateResponse_WithSystemErrors() {
-        // Prepare test data
-        RetrieveQuestionsResponseTO response = new RetrieveQuestionsResponseTO();
-        RetrieveQuestionsResponse responseDetail = new RetrieveQuestionsResponse();
-        responseDetail.setSystemErrors(Collections.singletonList(new SystemError()));
-        response.setResponse(responseDetail);
-
-        // Verify that the method under test throws an EnhancedException
-        assertThrows(EnhancedException.class, () -> retrieveQuestionService.validateResponse(response));
-    }
-
-    @Test
-    public void testRetrieveQuenitonExecutionMethod() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        // Prepare test data
-        RetrieveQuestionBodyRequest retrieveQuestionRequest = new RetrieveQuestionBodyRequest();
-        Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("key", "value");
-
-        // Invoke the private method under test using reflection
-        Method method = RetrieveQuestionService.class.getDeclaredMethod("retrieveQuenitonExecutionMethod", RetrieveQuestionBodyRequest.class, Map.class);
-        method.setAccessible(true);
-        Object result = method.invoke(retrieveQuestionService, retrieveQuestionRequest, headerMap);
-
-        // Verify the result
-        assertNotNull(result);
-        assertTrue(result instanceof ExecutionFunction);
+        // Add more assertions as needed
     }
 }
