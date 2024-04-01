@@ -35,81 +35,91 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.HashMap;
-
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import org.junit.Test;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
-@RunWith(MockitoJUnitRunner.class)
-public class FinancialHardshipProcessorTest {
+public class DateUtilTest {
 
-    @Mock
-    private FinancialHardshipRequestBuilder requestBuilder;
-
-    @Mock
-    private FinancialHardshipService service;
-
-    @InjectMocks
-    private FinancialHardshipProcessor processor;
-
-    @Test
-    public void testProcessRetrieveQuestionnaireData_Success() throws EnhancedException {
-        // Prepare test data
-        RetrieveQuestionModel retrieveQuestionModel = new RetrieveQuestionModel();
-        retrieveQuestionModel.setActivityO("SomeActivity");
-        retrieveQuestionModel.setQuestionDataMap(new HashMap<>());
-
-        // Stub method calls
-        when(requestBuilder.prepareRetrieveQuestionRequest(retrieveQuestionModel))
-                .thenReturn(new RetrieveQuestionRequest());
-        when(service.retrieveQuestion(any(), any()))
-                .thenReturn(new QuestionAndAnswerData());
-
-        // Call the method under test
-        FinancialHardshipData result = processor.processRetrieveQuestionnaireData(retrieveQuestionModel);
-
-        // Verify the behavior
-        assertNotNull(result);
-        assertNotNull(result.getQuestionAndAnswer());
-        assertTrue(result.getNavigationLink().size() > 0);
-        verify(processor, times(1)).getNavigationLinks();
+    // Helper method to create Date objects
+    private Date createDate(String dateString, String format, TimeZone timeZone) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setTimeZone(timeZone);
+        return sdf.parse(dateString);
     }
 
     @Test
-    public void testProcessRetrieveQuestionnaireData_Exception() throws EnhancedException {
-        // Prepare test data
-        RetrieveQuestionModel retrieveQuestionModel = new RetrieveQuestionModel();
-        retrieveQuestionModel.setActivityO("SomeActivity");
+    public void testNormalizeDate() {
+        Calendar date = Calendar.getInstance();
+        date.set(2024, Calendar.MARCH, 10, 14, 33, 22); // Arbitrary non-normalized date
+        DateUtil.normalizeDate(date);
+        assertEquals(0, date.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, date.get(Calendar.MINUTE));
+        assertEquals(0, date.get(Calendar.SECOND));
+        assertEquals(0, date.get(Calendar.MILLISECOND));
+    }
 
-        // Stub method calls to throw an exception
-        when(requestBuilder.prepareRetrieveQuestionRequest(retrieveQuestionModel))
-                .thenThrow(new EnhancedException("Error message"));
-
-        // Call the method under test
-        FinancialHardshipData result = processor.processRetrieveQuestionnaireData(retrieveQuestionModel);
-
-        // Verify the behavior
-        assertNotNull(result);
-        assertNull(result.getQuestionAndAnswer());
-        assertTrue(result.getNavigationLink().isEmpty());
-        verify(processor, times(0)).getNavigationLinks(); // No invocation expected due to exception
+    @Test(expected = EnhancedException.class)
+    public void testGetDateWithInvalidFormat() throws EnhancedException {
+        DateUtil.getDate("2024-03-10", "wrong-format");
     }
 
     @Test
-    public void testGetFinancialHardship() {
-        // Call the static method directly
-        FinancialHardshipData result = FinancialHardshipProcessor.getFinancialHardship("SomeActivity");
-
-        // Verify the behavior
-        assertNotNull(result);
-        assertEquals("", result.getType());
-        assertNull(result.getCmsData());
+    public void testCompareDate() throws Exception {
+        // Assuming today is 2024-03-10
+        String todayStr = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
+        int comparisonResult = DateUtil.compareDate(todayStr, "MM/dd/yyyy");
+        assertEquals(0, comparisonResult); // The dates are equal
     }
+
+    @Test
+    public void testClearAllExceptYearMonthDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.MARCH, 10, 14, 33, 22);
+        DateUtil.clearAllExceptYearMonthDate(calendar);
+        assertEquals(2024, calendar.get(Calendar.YEAR));
+        assertEquals(Calendar.MARCH, calendar.get(Calendar.MONTH));
+        assertEquals(10, calendar.get(Calendar.DATE));
+        assertEquals(0, calendar.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, calendar.get(Calendar.MINUTE));
+        assertEquals(0, calendar.get(Calendar.SECOND));
+        assertEquals(0, calendar.get(Calendar.MILLISECOND));
+    }
+
+    @Test
+    public void testGetDateAsString() throws Exception {
+        Date date = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
+        String formattedDate = DateUtil.getDateAsString(date, "MM/dd/yyyy");
+        assertEquals("03/10/2024", formattedDate);
+    }
+
+    @Test
+    public void testFormatStringDate() throws Exception {
+        String originalDateStr = "10-03-2024";
+        String formattedDate = DateUtil.formatStringDate(originalDateStr, "dd-MM-yyyy", "MM/dd/yyyy");
+        assertEquals("03/10/2024", formattedDate);
+    }
+
+    @Test
+    public void testCompareDates() throws Exception {
+        Date date1 = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
+        Date date2 = createDate("2024/03/11", "yyyy/MM/dd", TimeZone.getDefault());
+        int comparisonResult = DateUtil.compareDates(date1, date2, TimeZone.getDefault());
+        assertTrue(comparisonResult < 0); // date1 is before date2
+    }
+
+    @Test
+    public void testIncrementDateByDays() {
+        Calendar date = Calendar.getInstance();
+        date.set(2024, Calendar.MARCH, 10);
+        Calendar newDate = DateUtil.incrementDateByDays(date, 5);
+        assertEquals(15, newDate.get(Calendar.DAY_OF_MONTH));
+    }
+
+    // Add more tests here to cover other methods and scenarios
 }
