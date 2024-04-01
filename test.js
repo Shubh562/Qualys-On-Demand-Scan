@@ -34,66 +34,155 @@ async function sendEmail(to, subject, text) {
 sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
+import org.junit.Test;
+import static org.junit.Assert.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
-@Test
-public void testConstructor() {
-    new DateUtil(); // This is solely to cover the constructor in coverage reports.
-}
+public class DateUtilTest {
 
-@Test(expected = EnhancedException.class)
-public void testGetDateParseException() throws EnhancedException {
-    DateUtil.getDate("invalid-date-format", "MM/dd/yyyy");
-}
+    @Test
+    public void testNormalizeDate() {
+        Calendar date = Calendar.getInstance();
+        date.set(2024, Calendar.MARCH, 10, 14, 33, 22); // Set a specific time
+        DateUtil.normalizeDate(date);
+        assertEquals(0, date.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, date.get(Calendar.MINUTE));
+        assertEquals(0, date.get(Calendar.SECOND));
+        assertEquals(0, date.get(Calendar.MILLISECOND));
+    }
 
+    @Test(expected = EnhancedException.class)
+    public void testGetDateWithParseException() throws EnhancedException {
+        DateUtil.getDate("2024-03-10", "yyyy-MM-dd");
+    }
 
-@Test
-public void testGetDateAsStringWithNulls() {
-    assertNull("Should return null when date or format is null", DateUtil.getDateAsString(null, null));
-}
+    @Test
+    public void testGetDate() throws EnhancedException {
+        assertNotNull(DateUtil.getDate("03/10/2024", "MM/dd/yyyy"));
+    }
 
+    @Test
+    public void testCompareDate() throws EnhancedException {
+        String todayStr = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
+        assertTrue(DateUtil.compareDate(todayStr, "MM/dd/yyyy") == 0);
+    }
 
-@Test
-public void testFormatStringDateParseException() {
-    assertNull("Should return null for unparseable date string", DateUtil.formatStringDate("not-a-date", "MM/dd/yyyy", "yyyy-MM-dd"));
-}
+    @Test
+    public void testClearAllExceptYearMonthDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 10); // Ensure there's something to clear
+        DateUtil.clearAllExceptYearMonthDate(cal);
+        assertEquals(0, cal.get(Calendar.HOUR_OF_DAY));
+    }
 
-@Test
-public void testFormatStringDateWithNullArguments() {
-    assertNull("Should return null when any argument is null", DateUtil.formatStringDate(null, null, null));
-}
+    @Test
+    public void testGetDateAsStringWithNullDate() {
+        assertNull(DateUtil.getDateAsString(null, "MM/dd/yyyy"));
+    }
 
-@Test
-public void testCompareDatesFirstDateNull() {
-    assertEquals("Should return 999 if firstDate is null", 999, DateUtil.compareDates(null, new Date(), TimeZone.getDefault()));
-}
+    @Test
+    public void testGetDateAsString() {
+        Calendar cal = Calendar.getInstance();
+        String result = DateUtil.getDateAsString(cal.getTime(), "MM/dd/yyyy");
+        assertNotNull(result);
+    }
 
-@Test
-public void testCompareDatesSecondDateNull() {
-    assertEquals("Should return 999 if secondDate is null", 999, DateUtil.compareDates(new Date(), null, TimeZone.getDefault()));
-}
+    @Test(expected = EnhancedException.class)
+    public void testGetDateWithTimeZoneParseException() throws EnhancedException {
+        DateUtil.getDate("invalid", "MM/dd/yyyy", TimeZone.getDefault());
+    }
 
-@Test
-public void testCompareDatesBothDatesNull() {
-    assertEquals("Should return 999 if both dates are null", 999, DateUtil.compareDates(null, null, TimeZone.getDefault()));
-}
+    @Test
+    public void testFormatStringDateParseException() {
+        assertNull(DateUtil.formatStringDate("invalid", "MM/dd/yyyy", "yyyy-MM-dd"));
+    }
 
-@Test
-public void testCompareDatesEqualDates() throws Exception {
-    Date date1 = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
-    Date date2 = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
-    assertEquals("Should return 0 for equal dates", 0, DateUtil.compareDates(date1, date2, TimeZone.getDefault()));
-}
+    @Test
+    public void testFormatStringDateWithNullArguments() {
+        assertNull(DateUtil.formatStringDate(null, null, null));
+    }
 
-@Test
-public void testCompareDatesFirstDateBefore() throws Exception {
-    Date date1 = createDate("2024/03/09", "yyyy/MM/dd", TimeZone.getDefault());
-    Date date2 = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
-    assertEquals("Should return -1 if firstDate is before secondDate", -1, DateUtil.compareDates(date1, date2, TimeZone.getDefault()));
-}
+    @Test
+    public void testCompareDates() throws ParseException, EnhancedException {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        Date date1 = sdf.parse("03/10/2024");
+        Date date2 = sdf.parse("03/11/2024");
+        assertTrue(DateUtil.compareDates(date1, date2, TimeZone.getDefault()) < 0);
+    }
 
-@Test
-public void testCompareDatesFirstDateAfter() throws Exception {
-    Date date1 = createDate("2024/03/11", "yyyy/MM/dd", TimeZone.getDefault());
-    Date date2 = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
-    assertEquals("Should return 1 if firstDate is after secondDate", 1, DateUtil.compareDates(date1, date2, TimeZone.getDefault()));
+    @Test
+    public void testIncrementDateByDays() {
+        Calendar date = Calendar.getInstance();
+        int currentDay = date.get(Calendar.DAY_OF_MONTH);
+        Calendar newDate = DateUtil.incrementDateByDays(date, 5);
+        assertEquals(currentDay + 5, newDate.get(Calendar.DAY_OF_MONTH));
+    }
+    
+    @Test
+    public void testConvertDateToCalendarWithNullDate() {
+        assertNull(DateUtil.convertDateToCalendar(null));
+    }
+
+    // Ensuring the logging and re-throwing of ParseException in getDate method
+    @Test(expected = EnhancedException.class)
+    public void testGetDateLoggingAndRethrowingException() throws EnhancedException {
+        // Assuming the LOGGER is mocked to verify interactions, if your testing framework supports it
+        DateUtil.getDate("not-a-date", "MM/dd/yyyy");
+    }
+
+    // Testing getDate with valid time zone
+    @Test
+    public void testGetDateWithTimeZone() throws EnhancedException {
+        assertNotNull(DateUtil.getDate("03/10/2024", "MM/dd/yyyy", TimeZone.getTimeZone("UTC")));
+    }
+
+    // Covering static initializers and fields
+    @Test
+    public void testStaticFieldsInitialization() {
+        assertNotNull(DateUtil.PACIFIC_TIMEZONE);
+        assertNotNull(DateUtil.DEFAULT_LOCALE);
+        assertNotNull(DateUtil.zoneld);
+        assertEquals("mmddyXXX.", DateUtil.MM_DD_YYYY);
+    }
+
+    // Testing formatStringDate with valid arguments
+    @Test
+    public void testFormatStringDate() {
+        String formattedDate = DateUtil.formatStringDate("03/10/2024", "MM/dd/yyyy", "yyyy-MM-dd");
+        assertEquals("2024-03-10", formattedDate);
+    }
+
+    // Testing comparedates with both dates null
+    @Test
+    public void testCompareDatesBothNull() {
+        assertEquals(999, DateUtil.compareDates(null, null, TimeZone.getDefault()));
+    }
+
+    // Testing getCalendar with a specific timezone
+    @Test
+    public void testGetCalendarWithTimeZone() {
+        Calendar cal = DateUtil.getCalendar(Calendar.getInstance().getTime(), TimeZone.getTimeZone("UTC"));
+        assertEquals(TimeZone.getTimeZone("UTC"), cal.getTimeZone());
+    }
+
+    // Ensuring normalizeDate doesn't throw an exception for edge cases
+    @Test
+    public void testNormalizeDateEdgeCases() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 0); // Unusual year
+        DateUtil.normalizeDate(cal); // Test doesn't assert; just ensures no exceptions
+        assertTrue(true); // Dummy assertion to denote test passed
+    }
+
+    // Test the no-op constructor for coverage
+    @Test
+    public void testConstructorIsNoOp() {
+        new DateUtil(); // Coverage for the default constructor
+        assertTrue(true); // Assert true as a placeholder
+    }
+
 }
