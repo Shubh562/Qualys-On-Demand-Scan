@@ -35,91 +35,65 @@ sendEmail('kumarshubham562@gmail.com','scan reference','heyyy your refrence');
 
 
 
-import static org.junit.Assert.*;
-import org.junit.Test;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+@Test
+public void testConstructor() {
+    new DateUtil(); // This is solely to cover the constructor in coverage reports.
+}
 
-public class DateUtilTest {
+@Test(expected = EnhancedException.class)
+public void testGetDateParseException() throws EnhancedException {
+    DateUtil.getDate("invalid-date-format", "MM/dd/yyyy");
+}
 
-    // Helper method to create Date objects
-    private Date createDate(String dateString, String format, TimeZone timeZone) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        sdf.setTimeZone(timeZone);
-        return sdf.parse(dateString);
-    }
 
-    @Test
-    public void testNormalizeDate() {
-        Calendar date = Calendar.getInstance();
-        date.set(2024, Calendar.MARCH, 10, 14, 33, 22); // Arbitrary non-normalized date
-        DateUtil.normalizeDate(date);
-        assertEquals(0, date.get(Calendar.HOUR_OF_DAY));
-        assertEquals(0, date.get(Calendar.MINUTE));
-        assertEquals(0, date.get(Calendar.SECOND));
-        assertEquals(0, date.get(Calendar.MILLISECOND));
-    }
+@Test
+public void testGetDateAsStringWithNulls() {
+    assertNull("Should return null when date or format is null", DateUtil.getDateAsString(null, null));
+}
 
-    @Test(expected = EnhancedException.class)
-    public void testGetDateWithInvalidFormat() throws EnhancedException {
-        DateUtil.getDate("2024-03-10", "wrong-format");
-    }
 
-    @Test
-    public void testCompareDate() throws Exception {
-        // Assuming today is 2024-03-10
-        String todayStr = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
-        int comparisonResult = DateUtil.compareDate(todayStr, "MM/dd/yyyy");
-        assertEquals(0, comparisonResult); // The dates are equal
-    }
+@Test
+public void testFormatStringDateParseException() {
+    assertNull("Should return null for unparseable date string", DateUtil.formatStringDate("not-a-date", "MM/dd/yyyy", "yyyy-MM-dd"));
+}
 
-    @Test
-    public void testClearAllExceptYearMonthDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.MARCH, 10, 14, 33, 22);
-        DateUtil.clearAllExceptYearMonthDate(calendar);
-        assertEquals(2024, calendar.get(Calendar.YEAR));
-        assertEquals(Calendar.MARCH, calendar.get(Calendar.MONTH));
-        assertEquals(10, calendar.get(Calendar.DATE));
-        assertEquals(0, calendar.get(Calendar.HOUR_OF_DAY));
-        assertEquals(0, calendar.get(Calendar.MINUTE));
-        assertEquals(0, calendar.get(Calendar.SECOND));
-        assertEquals(0, calendar.get(Calendar.MILLISECOND));
-    }
+@Test
+public void testFormatStringDateWithNullArguments() {
+    assertNull("Should return null when any argument is null", DateUtil.formatStringDate(null, null, null));
+}
 
-    @Test
-    public void testGetDateAsString() throws Exception {
-        Date date = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
-        String formattedDate = DateUtil.getDateAsString(date, "MM/dd/yyyy");
-        assertEquals("03/10/2024", formattedDate);
-    }
+@Test
+public void testCompareDatesFirstDateNull() {
+    assertEquals("Should return 999 if firstDate is null", 999, DateUtil.compareDates(null, new Date(), TimeZone.getDefault()));
+}
 
-    @Test
-    public void testFormatStringDate() throws Exception {
-        String originalDateStr = "10-03-2024";
-        String formattedDate = DateUtil.formatStringDate(originalDateStr, "dd-MM-yyyy", "MM/dd/yyyy");
-        assertEquals("03/10/2024", formattedDate);
-    }
+@Test
+public void testCompareDatesSecondDateNull() {
+    assertEquals("Should return 999 if secondDate is null", 999, DateUtil.compareDates(new Date(), null, TimeZone.getDefault()));
+}
 
-    @Test
-    public void testCompareDates() throws Exception {
-        Date date1 = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
-        Date date2 = createDate("2024/03/11", "yyyy/MM/dd", TimeZone.getDefault());
-        int comparisonResult = DateUtil.compareDates(date1, date2, TimeZone.getDefault());
-        assertTrue(comparisonResult < 0); // date1 is before date2
-    }
+@Test
+public void testCompareDatesBothDatesNull() {
+    assertEquals("Should return 999 if both dates are null", 999, DateUtil.compareDates(null, null, TimeZone.getDefault()));
+}
 
-    @Test
-    public void testIncrementDateByDays() {
-        Calendar date = Calendar.getInstance();
-        date.set(2024, Calendar.MARCH, 10);
-        Calendar newDate = DateUtil.incrementDateByDays(date, 5);
-        assertEquals(15, newDate.get(Calendar.DAY_OF_MONTH));
-    }
+@Test
+public void testCompareDatesEqualDates() throws Exception {
+    Date date1 = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
+    Date date2 = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
+    assertEquals("Should return 0 for equal dates", 0, DateUtil.compareDates(date1, date2, TimeZone.getDefault()));
+}
 
-    // Add more tests here to cover other methods and scenarios
+@Test
+public void testCompareDatesFirstDateBefore() throws Exception {
+    Date date1 = createDate("2024/03/09", "yyyy/MM/dd", TimeZone.getDefault());
+    Date date2 = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
+    assertEquals("Should return -1 if firstDate is before secondDate", -1, DateUtil.compareDates(date1, date2, TimeZone.getDefault()));
+}
+
+@Test
+public void testCompareDatesFirstDateAfter() throws Exception {
+    Date date1 = createDate("2024/03/11", "yyyy/MM/dd", TimeZone.getDefault());
+    Date date2 = createDate("2024/03/10", "yyyy/MM/dd", TimeZone.getDefault());
+    assertEquals("Should return 1 if firstDate is after secondDate", 1, DateUtil.compareDates(date1, date2, TimeZone.getDefault()));
 }
